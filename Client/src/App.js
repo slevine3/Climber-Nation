@@ -20,19 +20,22 @@ import "./components/Profile.css";
 const App = () => {
   const navigate = useNavigate();
   useEffect(() => {
+    axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response.status !== 200) {
+          localStorage.removeItem("token");
+          navigate("/");
+        }
+      }
+    );
+
     axios
       .get("http://localhost:5000/authentication", {
         headers: { authorization: localStorage.getItem("token") },
       })
-      .then((response) => {
-        if (response.status !== 200) {
-          console.log("200");
-
-          localStorage.removeItem("token");
-          return;
-        } else {
-          navigate("/profile");
-        }
+      .then((error) => {
+        if (error.status === 200) return;
       });
   }, []);
 
