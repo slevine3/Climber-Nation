@@ -128,7 +128,7 @@ app.post("/login", async (req, res) => {
   const userFirstName = await db("users")
     .select("first_name")
     .where("username", username);
-
+console.log(userFirstName[0].first_name)
   try {
     if (username !== userExists[0]?.username) {
       res.send("Sorry this username does not exist");
@@ -146,6 +146,7 @@ app.post("/login", async (req, res) => {
         accessToken: accessToken,
         // refreshToken: refreshToken,
         username: username,
+        first_name: userFirstName[0].first_name
       });
 
       return;
@@ -160,7 +161,7 @@ app.post("/login", async (req, res) => {
 
 const generateAccessToken = (user) => {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "300m",
+    expiresIn: "30m",
   });
 };
 //REFRESH TOKEN

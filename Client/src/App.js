@@ -3,7 +3,7 @@ import { Route, Link } from "react-router-dom";
 import { BrowserRouter, Routes } from "react-router-dom";
 import { Switch } from "react-router";
 import FindClimbers from "./components/FindClimbers";
-import { Home } from "./components/Home";
+import  Home  from "./components/Home";
 import Login from "./components/Sign-In/Login";
 import { Register } from "./components/Sign-In/Register";
 import Profile from "./components/Profile";
@@ -18,6 +18,7 @@ import "./components/Home.css";
 import "./components/Profile.css";
 
 const App = () => {
+
   const navigate = useNavigate();
   useEffect(() => {
     axios.interceptors.response.use(

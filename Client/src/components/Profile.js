@@ -35,10 +35,6 @@ const Profile = () => {
 
       <div className="profile_container">
         <div>
-          {/* Enter First Name Here */}
-          <div>
-            <h1>Welcome {}</h1>
-          </div>
           <div>
             <img
               className="profile_image"

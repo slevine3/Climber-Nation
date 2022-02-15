@@ -1,27 +1,24 @@
-import { combineReducers } from 'redux';
-
+import { combineReducers } from "redux";
 
 let initialState = {
   selected_file: null,
-  isLoggedIn: false,
-  username: '',
-  first_name: '',
+  username: "",
+  first_name: "",
 };
 
 const imageUpload = (state = initialState, action) => {
   switch (action.type) {
     case "SELECTED_FILE":
-      return { ...state, selected_file: action.payload};
-
+      return { ...state, selected_file: action.payload };
     default:
       return { state };
   }
 };
 
-const logUserIn = (state = initialState, action) => {
+const newUserLogIn = (state = initialState, action) => {
   switch (action.type) {
     case "LOG_IN":
-      return { ...state, isLoggedIn: action.payload};
+      return {...state};
     default:
       return { state };
   }
@@ -29,5 +26,5 @@ const logUserIn = (state = initialState, action) => {
 
 export const rootReducers = combineReducers({
   imageUpload,
-  logUserIn
-})
+  newUserLogIn,
+});

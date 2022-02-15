@@ -1,4 +1,3 @@
-
 export const fileSelectHandler = (image) => {
   return {
     type: "SELECTED_FILE",
@@ -6,10 +5,9 @@ export const fileSelectHandler = (image) => {
   };
 };
 
-
-export const authenticationStatusChange = () => {
+export const newUserLogIn = (first_name) => {
   return {
     type: "LOG_IN",
-    payload: true,
+    payload: first_name,
   };
 };

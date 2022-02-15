@@ -2,18 +2,19 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { authenticationStatusChange } from "../Actions.js/Actions";
+import { newUserLogIn } from "../Actions.js/Actions";
 
 const Login = (props) => {
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
+  const [first_name, setFirstName] = useState("");
   const [message, setMessage] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
-   
+    // event.preventDefault();
+
     axios
       .post("http://localhost:5000/login", {
         username: username,
@@ -39,11 +40,12 @@ const Login = (props) => {
       })
       .then((response) => {
         if (response.status === 200) {
+          setFirstName(response.data.first_name);
           navigate("/home");
         }
       });
   };
-
+  props.newUserLogIn(first_name);
   return (
     <div className="login_container">
       <div className="login_input">
@@ -86,14 +88,12 @@ const Login = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  return {
-    authentication: state.logUserIn.state.isLoggedIn,
-  };
+  return {};
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    authenticationStatusChange: () => dispatch(authenticationStatusChange()),
+    newUserLogIn: (first_name) => dispatch(newUserLogIn(first_name)),
   };
 };
 
