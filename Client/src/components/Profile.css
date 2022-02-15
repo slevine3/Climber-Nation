@@ -1,0 +1,28 @@
+.profile_container {
+  display: flex;
+  font-size: 24px;
+  flex-direction: column;
+}
+.profile_image {
+  display: flex;
+  margin: 30px 0px 0px 30px;
+  width: 200px;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+.user_level_container {
+  display: flex;
+  justify-content: space-evenly;
+}
+.bouldering {
+  display: flex;
+  flex-direction: column;
+}
+
+.select {
+  height: 50px;
+  font-size: 24px;
+}

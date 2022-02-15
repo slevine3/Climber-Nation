@@ -1,0 +1,32 @@
+.chooseClimb {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 125px;
+
+}
+.indoor_container {
+  text-align: center;
+  border: 5px solid black;
+  margin-right: 30px;
+  padding: 20px 20px 0px 20px;
+}
+.indoor_image {
+  height: auto;
+  width: 575px;
+  cursor: pointer;
+}
+.outdoor_container {
+  margin-left: 30px;
+  text-align: center;
+  border: 5px solid black;
+  padding: 20px 20px 0px 20px;
+}
+.outdoor_image {
+  height: 475px;
+  width: auto;
+  cursor: pointer;
+}
+.title {
+  text-decoration: underline;
+}
