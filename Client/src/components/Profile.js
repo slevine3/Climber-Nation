@@ -14,7 +14,7 @@ const Profile = () => {
     event.preventDefault();
     const formData = new FormData();
     formData.append("image", file);
-
+    formData.append("user_id", localStorage.getItem("user_id"));
     try {
       axios({
         url: "http://localhost:5000/upload",
@@ -24,6 +24,18 @@ const Profile = () => {
       }).then((res) => {
         setError(res.data.error);
       });
+    } catch (error) {
+      console.log(error);
+    }
+
+    try {
+      axios
+        .get("http://localhost:5000/retrieve", {
+          params: {
+            params: "hello"
+          },
+        })
+        .then((response) => console.log(response));
     } catch (error) {
       console.log(error);
     }

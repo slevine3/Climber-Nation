@@ -24,7 +24,7 @@ export const NavBar = () => {
         </div>
         <div className="nav_link">
           <div>
-            <a href="/" onClick={() => localStorage.removeItem("token")}>
+            <a href="/" onClick={() => localStorage.clear()}>
               Log Out
             </a>
           </div>

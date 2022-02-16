@@ -101,17 +101,15 @@ const authenticateToken = (req, res, next) => {
 //AUTHENTICATION
 
 app.get("/authentication", authenticateToken, async (req, res) => {
-  const first_name = await db("users")
-    .select("first_name")
-    .where("username", req.user.username);
+  const username = req.user.username;
+  const allUserInfo = await db("users")
+    .select("user_id", "first_name")
+    .where("username", username);
 
   // const image = await db("users")
   // .select("image")
   // .where("username", req.username);
-
-
-  // console.log(first_name[0].first_name);
-  res.json({ first_name: first_name[0].first_name });
+  res.json({ allUserInfo: allUserInfo[0] });
 });
 
 //LOGIN
@@ -119,6 +117,8 @@ app.get("/authentication", authenticateToken, async (req, res) => {
 app.post("/login", async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
+
+  const id = await db("users").select("user_id").where("username", username);
   const userExists = await db("users")
     .select("username")
     .where("username", username);
@@ -128,7 +128,6 @@ app.post("/login", async (req, res) => {
   const userFirstName = await db("users")
     .select("first_name")
     .where("username", username);
-console.log(userFirstName[0].first_name)
   try {
     if (username !== userExists[0]?.username) {
       res.send("Sorry this username does not exist");
@@ -146,7 +145,6 @@ console.log(userFirstName[0].first_name)
         accessToken: accessToken,
         // refreshToken: refreshToken,
         username: username,
-        first_name: userFirstName[0].first_name
       });
 
       return;
@@ -161,7 +159,7 @@ console.log(userFirstName[0].first_name)
 
 const generateAccessToken = (user) => {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "30m",
+    expiresIn: "5s",
   });
 };
 //REFRESH TOKEN
@@ -169,7 +167,6 @@ const generateAccessToken = (user) => {
 // app.post("/token", (req, res) => {
 // const refreshToken = req.body.token;
 // if (refreshToken == null) return res.sendStatus(401)
-
 
 // });
 
@@ -201,26 +198,39 @@ const upload = multer({
 }).single("image");
 
 app.post("/upload", (req, res) => {
-  upload(req, res, function (error) {
-    if (error) {
-      res.send({
-        error:
-          "Sorry only png, jpg, and jpeg files allowed. Please try uploading something else!",
-      });
-    } else {
-      const image = req.file.filename;
-      //1. Need to send username from login page state to profile page state.
-      //2. Then need to send profile state containing username along with image in formData
-      const username = req.body.username;
-
-      const sendImageToDb = db("users")
-        .returning(["username", "image"])
-        .select("username", username)
-        .insert({
-          image: image,
+  upload(req, res, async function (error) {
+    try {
+      const filename = req.file.filename;
+      const user_id = req.body.user_id;
+      if (error) {
+        res.send({
+          error:
+            "Sorry only png, jpg, and jpeg files allowed. Please try uploading something else!",
         });
+      } else {
+        await db("images").where("image_id", user_id).del();
+        await db("images")
+          .where("image_id", user_id)
+          .insert({
+            filename: filename,
+            image_id: user_id,
+          })
+          .into("images");
+      }
+    } catch (error) {
+      console.log(error);
     }
   });
+});
+
+app.get("/retrieve", async (req, res) => {
+  // const user_id = req.body.user_id;
+  console.log(req.body);
+  const image = await db("images")
+    .select("filename")
+    .where("image_id", user_id);
+
+  res.json({ image: image });
 });
 
 // fetch('http://api.amp.active.com/v2/search/?near=california&current_page=1&per_page=10&sort=distance&exclude_children=true&api_key=ps36nt6jjz6g7mhgwa7h9fx9')

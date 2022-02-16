@@ -18,7 +18,7 @@ const imageUpload = (state = initialState, action) => {
 const newUserLogIn = (state = initialState, action) => {
   switch (action.type) {
     case "LOG_IN":
-      return {...state};
+      return {...state, first_name:action.payload};
     default:
       return { state };
   }

@@ -26,7 +26,7 @@ const App = () => {
       (error) => {
         if (error.response.status !== 200) {
           localStorage.removeItem("token");
-          navigate("/");
+          navigate(1) 
         }
       }
     );

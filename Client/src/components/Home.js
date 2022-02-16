@@ -1,19 +1,23 @@
 import { NavBar } from "./NavBar";
 import { connect } from "react-redux";
 const Home = (props) => {
-  const first_name = localStorage.getItem('first_name')
+
+const name = localStorage.getItem('name')
   return (
     <div>
       <NavBar />
       <div>
-        <h1>Welcome {}</h1>
+        <h1>Welcome {name}</h1>
       </div>
     </div>
   );
 };
 
 const mapStateToProps = (state) => {
-  return {};
+  // console.log(state.newUserLogIn.first_name);
+  return {
+    // first_name: state.newUserLogIn.first_name
+  };
 };
 
 export default connect(mapStateToProps)(Home);

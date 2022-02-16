@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -13,8 +13,6 @@ const Login = (props) => {
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
-    // event.preventDefault();
-
     axios
       .post("http://localhost:5000/login", {
         username: username,
@@ -39,8 +37,10 @@ const Login = (props) => {
         headers: { authorization: localStorage.getItem("token") },
       })
       .then((response) => {
-        if (response.status === 200) {
-          setFirstName(response.data.first_name);
+        if (response.status === 200) { 
+          localStorage.setItem("name", response.data.allUserInfo.first_name);
+          localStorage.setItem("image", response.data.allUserInfo.image);
+          localStorage.setItem("user_id", response.data.allUserInfo.user_id);
           navigate("/home");
         }
       });
