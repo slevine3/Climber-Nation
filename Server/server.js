@@ -106,10 +106,11 @@ app.get("/authentication", authenticateToken, async (req, res) => {
     .select("user_id", "first_name")
     .where("username", username);
 
-  // const image = await db("users")
-  // .select("image")
-  // .where("username", req.username);
-  res.json({ allUserInfo: allUserInfo[0] });
+  const image = await db("images")
+    .innerJoin("users", "images.image_id", "users.user_id")
+    .select("filename").where("username", username)
+
+  res.json({ allUserInfo: allUserInfo[0], image: image });
 });
 
 //LOGIN
@@ -202,6 +203,7 @@ app.post("/upload", (req, res) => {
     try {
       const filename = req.file.filename;
       const user_id = req.body.user_id;
+
       if (error) {
         res.send({
           error:
@@ -221,16 +223,6 @@ app.post("/upload", (req, res) => {
       console.log(error);
     }
   });
-});
-
-app.get("/retrieve", async (req, res) => {
-  // const user_id = req.body.user_id;
-  console.log(req.body);
-  const image = await db("images")
-    .select("filename")
-    .where("image_id", user_id);
-
-  res.json({ image: image });
 });
 
 // fetch('http://api.amp.active.com/v2/search/?near=california&current_page=1&per_page=10&sort=distance&exclude_children=true&api_key=ps36nt6jjz6g7mhgwa7h9fx9')
