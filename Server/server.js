@@ -160,7 +160,7 @@ app.post("/login", async (req, res) => {
 
 const generateAccessToken = (user) => {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "5s",
+    expiresIn: "30m",
   });
 };
 //REFRESH TOKEN

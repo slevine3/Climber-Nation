@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { newUserLogIn } from "../Actions.js/Actions";
+import { newUserLogIn } from "../Actions/Actions";
 
 const Login = (props) => {
   const [username, setUsername] = useState(null);
@@ -37,10 +37,11 @@ const Login = (props) => {
         headers: { authorization: localStorage.getItem("token") },
       })
       .then((response) => {
-        if (response.status === 200) { 
+        if (response.status === 200) {
           localStorage.setItem("name", response.data.allUserInfo.first_name);
-          localStorage.setItem("image", response.data.allUserInfo.image);
+          localStorage.setItem("image", response.data.image[0].filename);
           localStorage.setItem("user_id", response.data.allUserInfo.user_id);
+
           navigate("/home");
         }
       });

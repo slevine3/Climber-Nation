@@ -1,9 +1,11 @@
 import default_profile from "./default_profile.png";
 import { NavBar } from "./NavBar";
 import { connect } from "react-redux";
-import fileSelectHandler from "./Actions.js/Actions";
+import fileSelectHandler from "../Actions/Actions";
 import axios from "axios";
 import React, { useState } from "react";
+import dog from "./dog.jpg";
+
 const FormData = require("form-data");
 
 const Profile = () => {
@@ -13,6 +15,13 @@ const Profile = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
+    console.log(file);
+    // let reader = new FileReader();
+    // reader.readAsDataURL(file);
+    // reader.onload = (e) => {
+    //   console.log("result" ,e.target.result);
+    // };
+
     formData.append("image", file);
     formData.append("user_id", localStorage.getItem("user_id"));
     try {
@@ -21,21 +30,16 @@ const Profile = () => {
         method: "POST",
         headers: {},
         data: formData,
+        onUploadProgress: (ProgressEvent) => {
+          console.log(
+            "Upload Progress: " +
+              Math.round((ProgressEvent.loaded / ProgressEvent.total) * 100) +
+              "%"
+          );
+        },
       }).then((res) => {
         setError(res.data.error);
       });
-    } catch (error) {
-      console.log(error);
-    }
-
-    try {
-      axios
-        .get("http://localhost:5000/retrieve", {
-          params: {
-            params: "hello"
-          },
-        })
-        .then((response) => console.log(response));
     } catch (error) {
       console.log(error);
     }
@@ -50,8 +54,10 @@ const Profile = () => {
           <div>
             <img
               className="profile_image"
-              src={default_profile}
-              alt="blank"
+              type="file"
+              name="image"
+              src={file !== null ? dog : default_profile}
+              alt="profile image"
             ></img>
           </div>
           <div>

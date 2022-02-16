@@ -1,6 +1,6 @@
 import { ChooseIndoor } from "./ChooseIndoor";
 import { ChooseOutdoor } from "./ChooseOutdoor";
-import { NavBar } from "./NavBar";
+import { NavBar } from "../Navigation/NavBar";
 import { Navigate } from "react-router-dom";
 import { connect } from "react-redux";
 

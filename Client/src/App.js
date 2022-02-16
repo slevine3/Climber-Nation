@@ -2,20 +2,20 @@ import React from "react";
 import { Route, Link } from "react-router-dom";
 import { BrowserRouter, Routes } from "react-router-dom";
 import { Switch } from "react-router";
-import FindClimbers from "./components/FindClimbers";
-import  Home  from "./components/Home";
+import FindClimbers from "./components/FindClimbers/FindClimbers";
+import  Home  from "./components/Navigation/Home";
 import Login from "./components/Sign-In/Login";
 import { Register } from "./components/Sign-In/Register";
-import Profile from "./components/Profile";
+import Profile from "./components/Navigation/Profile";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ErrorPage from "./components/ErrorPage";
 import { useEffect } from "react";
 import "./components/Sign-In/Login.css";
 import "./components/Sign-In/Register.css";
-import "./components/NavBar.css";
-import "./components/Home.css";
-import "./components/Profile.css";
+import "./components/Navigation/NavBar.css";
+import "./components/Navigation/Home.css";
+import "./components/Navigation/Profile.css";
 
 const App = () => {
 
