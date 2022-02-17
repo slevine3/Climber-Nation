@@ -4,11 +4,17 @@ import { connect } from "react-redux";
 import fileSelectHandler from "../Actions/Actions";
 import axios from "axios";
 import React, { useState } from "react";
+import { useRef } from "react";
 const FormData = require("form-data");
 
 const Profile = () => {
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
+  const [current_city, setCurrentCity] = useState(null);
+  const [climbing_preference, setClimbingPreference] = useState(null);
+  const [bouldering, setBouldering] = useState(null);
+  const [top_rope, setTopRope] = useState(null);
+  const [lead_climb, setLeadClimb] = useState(null);
 
   const handleOnChange = (event) => {
     setFile(event.target.files[0]);
@@ -45,26 +51,37 @@ const Profile = () => {
   };
 
   const fetchImage = () => {
-    console.log("running");
     try {
       axios
         .get("http://localhost:5000/authentication", {
           headers: { authorization: localStorage.getItem("token") },
         })
         .then((response) => {
-          if (localStorage.getItem("imageFile") !== null) {
-            console.log(response.data.imageFile);
-            localStorage.setItem("imageFile", response.data.imageFile);
-          }
+          localStorage.setItem("imageFile", response.data.imageFile);
+          window.location.reload();
         });
     } catch (error) {
       console.log(error);
     }
   };
+  const handleData = async (event) => {
+    event.preventDefault();
 
-  const handleUpload = () => {
-    // localStorage.setItem("imageFile", response.data.imageFile);
-    window.location.reload();
+    axios
+      .post("http://localhost:5000/data", {
+        current_city: current_city,
+        climbing_preference: climbing_preference,
+        bouldering: bouldering,
+        top_rope: top_rope,
+        lead_climb: lead_climb,
+        user_id: localStorage.getItem("user_id"),
+      })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
   return (
     <div>
@@ -86,6 +103,7 @@ const Profile = () => {
               alt="profile image"
             ></img>
           </div>
+
           <div>
             <div>
               <form
@@ -111,16 +129,48 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <div>
-          <button onClick={handleUpload}>Upload</button>
-        </div>
         <div className="user_level_container">
+          <div>
+            <div>
+              <h4>Current City</h4>
+            </div>
+            <div>
+              <select
+                onChange={(event) => setCurrentCity(event.target.value)}
+                className="select"
+              >
+                <option>New York City</option>
+                <option>Tel Aviv</option>
+                <option>San Diego</option>
+                <option>Los Angeles</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <div>
+              <h4>Climbing Preference</h4>
+            </div>
+            <div>
+              <select
+                onChange={(event) => setClimbingPreference(event.target.value)}
+                className="select"
+              >
+                <option>Indoor</option>
+                <option>Outdoor</option>
+                <option>Both</option>
+              </select>
+            </div>
+          </div>
           <div className="bouldering">
             <div>
               <h4>Bouldering</h4>
             </div>
             <div>
-              <select className="select">
+              <select
+                onChange={(event) => setBouldering(event.target.value)}
+                className="select"
+              >
                 <option>V0</option>
                 <option>V1</option>
                 <option>V2</option>
@@ -144,7 +194,10 @@ const Profile = () => {
               <h4>Top Rope</h4>
             </div>
             <div>
-              <select className="select">
+              <select
+                onChange={(event) => setTopRope(event.target.value)}
+                className="select"
+              >
                 <option>5.5 - 5.9</option>
                 <option>5.10a</option>
                 <option>5.10b</option>
@@ -165,7 +218,10 @@ const Profile = () => {
               <h4>Choose Level</h4>
             </div>
           </div>
-          <div className="lead_climb">
+          <div
+            onChange={(event) => setLeadClimb(event.target.value)}
+            className="lead_climb"
+          >
             <div>
               <h4>Lead Climb</h4>
             </div>
@@ -191,6 +247,9 @@ const Profile = () => {
               <h4>Choose Level</h4>
             </div>
           </div>
+        </div>
+        <div>
+          <button onClick={handleData}>Submit Data</button>
         </div>
       </div>
     </div>

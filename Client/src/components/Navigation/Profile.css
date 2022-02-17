@@ -17,12 +17,9 @@
   display: flex;
   justify-content: space-evenly;
 }
-.bouldering {
-  display: flex;
-  flex-direction: column;
-}
 
 .select {
   height: 50px;
   font-size: 24px;
+  text-align: center;
 }

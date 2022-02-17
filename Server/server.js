@@ -210,12 +210,12 @@ const upload = multer({
 app.post("/upload", (req, res) => {
   upload(req, res, async function (error) {
     try {
-      const filename = req.file.filename;
+      const filename = req.file?.filename;
       const user_id = req.body.user_id;
 
       if (error) {
         res.send({
-          error:
+         error:
             "Sorry only png, jpg, and jpeg files allowed. Please try uploading something else!",
         });
       } else {
@@ -233,6 +233,43 @@ app.post("/upload", (req, res) => {
     }
   });
 });
+
+
+app.post('/data', async (req, res) => {
+ const current_city = req.body.current_city;
+ const climbing_preference = req.body.climbing_preference;
+ const bouldering = req.body.bouldering;
+ const top_rope = req.body.top_rope;
+ const lead_climb= req.body.lead_climb;
+ const user_id = req.body.user_id;
+ console.log(user_id)
+ try {
+  await db("data").where("user_data_id", user_id).del();
+        await db("data")
+          .where("user_data_id", user_id)
+          .insert({
+            current_city: current_city,
+            climbing_preference: climbing_preference,
+            bouldering: bouldering,
+            top_rope: top_rope,
+            lead_climb: lead_climb,
+            user_data_id: user_id
+          })
+          .into("data");
+    
+ } catch (error) {
+   console.log(error)
+ }
+
+
+
+
+
+})
+
+
+
+
 
 // fetch('http://api.amp.active.com/v2/search/?near=california&current_page=1&per_page=10&sort=distance&exclude_children=true&api_key=ps36nt6jjz6g7mhgwa7h9fx9')
 //   .then(response => response)

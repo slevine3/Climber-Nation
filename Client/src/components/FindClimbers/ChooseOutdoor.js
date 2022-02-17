@@ -1,4 +1,4 @@
-import outdoor from './outdoor.jpg'
+import outdoor from './outdoor.PNG'
 
 export const ChooseOutdoor = () => {
     return(
