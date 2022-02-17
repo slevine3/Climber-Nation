@@ -39,7 +39,7 @@ const Login = (props) => {
       .then((response) => {
         if (response.status === 200) {
           localStorage.setItem("name", response.data.allUserInfo.first_name);
-          localStorage.setItem("image", response.data.image[0].filename);
+          localStorage.setItem("imageFile", response.data.imageFile);
           localStorage.setItem("user_id", response.data.allUserInfo.user_id);
 
           navigate("/home");

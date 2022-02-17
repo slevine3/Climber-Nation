@@ -20,6 +20,8 @@ app.use(
   })
 );
 
+app.use('/images', express.static(__dirname + '/Images'))
+
 app.listen(process.env.port, () => {
   console.log(`Listening on ${process.env.port}`);
 });
@@ -98,19 +100,26 @@ const authenticateToken = (req, res, next) => {
   }
 };
 
+
 //AUTHENTICATION
 
 app.get("/authentication", authenticateToken, async (req, res) => {
   const username = req.user.username;
+  
   const allUserInfo = await db("users")
     .select("user_id", "first_name")
     .where("username", username);
 
   const image = await db("images")
     .innerJoin("users", "images.image_id", "users.user_id")
-    .select("filename").where("username", username)
+    .select("filename")
+    .where("username", username);
 
-  res.json({ allUserInfo: allUserInfo[0], image: image });
+
+  const fileName = image[0]?.filename;
+  const imageFile = 'http://localhost:5000/images/' +  image[0]?.filename;
+ 
+  res.json({ allUserInfo: allUserInfo[0], imageFile: imageFile });
 });
 
 //LOGIN

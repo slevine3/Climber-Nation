@@ -4,23 +4,19 @@ import { connect } from "react-redux";
 import fileSelectHandler from "../Actions/Actions";
 import axios from "axios";
 import React, { useState } from "react";
-import dog from "./dog.jpg";
-
 const FormData = require("form-data");
 
 const Profile = () => {
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
 
+  const handleOnChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
-    console.log(file);
-    // let reader = new FileReader();
-    // reader.readAsDataURL(file);
-    // reader.onload = (e) => {
-    //   console.log("result" ,e.target.result);
-    // };
 
     formData.append("image", file);
     formData.append("user_id", localStorage.getItem("user_id"));
@@ -37,14 +33,39 @@ const Profile = () => {
               "%"
           );
         },
-      }).then((res) => {
-        setError(res.data.error);
+      }).then((response) => {
+        setError(response.data.error);
       });
+    } catch (error) {
+      console.log(error);
+    }
+    setTimeout(() => {
+      fetchImage();
+    }, 1000);
+  };
+
+  const fetchImage = () => {
+    console.log("running");
+    try {
+      axios
+        .get("http://localhost:5000/authentication", {
+          headers: { authorization: localStorage.getItem("token") },
+        })
+        .then((response) => {
+          if (localStorage.getItem("imageFile") !== null) {
+            console.log(response.data.imageFile);
+            localStorage.setItem("imageFile", response.data.imageFile);
+          }
+        });
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleUpload = () => {
+    // localStorage.setItem("imageFile", response.data.imageFile);
+    window.location.reload();
+  };
   return (
     <div>
       <NavBar />
@@ -56,7 +77,12 @@ const Profile = () => {
               className="profile_image"
               type="file"
               name="image"
-              src={file !== null ? dog : default_profile}
+              src={
+                localStorage.getItem("imageFile") ===
+                "http://localhost:5000/images/undefined"
+                  ? default_profile
+                  : localStorage.getItem("imageFile")
+              }
               alt="profile image"
             ></img>
           </div>
@@ -71,7 +97,7 @@ const Profile = () => {
                   type="file"
                   name="image"
                   multiple={false}
-                  onChange={(event) => setFile(event.target.files[0])}
+                  onChange={handleOnChange}
                 ></input>
                 <div>{error}</div>
                 <div>
@@ -85,7 +111,9 @@ const Profile = () => {
             </div>
           </div>
         </div>
-
+        <div>
+          <button onClick={handleUpload}>Upload</button>
+        </div>
         <div className="user_level_container">
           <div className="bouldering">
             <div>
