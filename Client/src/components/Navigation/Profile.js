@@ -139,6 +139,9 @@ const Profile = () => {
                 onChange={(event) => setCurrentCity(event.target.value)}
                 className="select"
               >
+                <option selected disabled>
+                  Choose one
+                </option>
                 <option>New York City</option>
                 <option>Tel Aviv</option>
                 <option>San Diego</option>
@@ -156,6 +159,9 @@ const Profile = () => {
                 onChange={(event) => setClimbingPreference(event.target.value)}
                 className="select"
               >
+                <option selected disabled>
+                  Choose one
+                </option>
                 <option>Indoor</option>
                 <option>Outdoor</option>
                 <option>Both</option>
@@ -171,6 +177,9 @@ const Profile = () => {
                 onChange={(event) => setBouldering(event.target.value)}
                 className="select"
               >
+                <option selected disabled>
+                  Choose one
+                </option>
                 <option>V0</option>
                 <option>V1</option>
                 <option>V2</option>
@@ -184,9 +193,6 @@ const Profile = () => {
                 <option>V10+</option>
               </select>
             </div>
-            <div>
-              <h4>Choose Level</h4>
-            </div>
           </div>
 
           <div className="top_rope">
@@ -198,6 +204,9 @@ const Profile = () => {
                 onChange={(event) => setTopRope(event.target.value)}
                 className="select"
               >
+                <option selected disabled>
+                  Choose one
+                </option>
                 <option>5.5 - 5.9</option>
                 <option>5.10a</option>
                 <option>5.10b</option>
@@ -213,9 +222,6 @@ const Profile = () => {
                 <option>5.12d</option>
                 <option>5.13+</option>
               </select>
-            </div>
-            <div>
-              <h4>Choose Level</h4>
             </div>
           </div>
           <div
@@ -227,6 +233,9 @@ const Profile = () => {
             </div>
             <div>
               <select className="select">
+                <option selected disabled>
+                  Choose one
+                </option>
                 <option>5.5 - 5.9</option>
                 <option>5.10a</option>
                 <option>5.10b</option>
@@ -242,9 +251,6 @@ const Profile = () => {
                 <option>5.12d</option>
                 <option>5.13+</option>
               </select>
-            </div>
-            <div>
-              <h4>Choose Level</h4>
             </div>
           </div>
         </div>
