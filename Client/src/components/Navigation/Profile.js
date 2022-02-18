@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import fileSelectHandler from "../Actions/Actions";
 import axios from "axios";
 import React, { useState } from "react";
-import { useRef } from "react";
+
 const FormData = require("form-data");
 
 const Profile = () => {

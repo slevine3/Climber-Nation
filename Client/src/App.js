@@ -16,6 +16,7 @@ import "./components/Sign-In/Register.css";
 import "./components/Navigation/NavBar.css";
 import "./components/Navigation/Home.css";
 import "./components/Navigation/Profile.css";
+import { SearchIndoor } from "./components/FindClimbers/SearchIndoor";
 
 const App = () => {
 
@@ -49,6 +50,7 @@ const App = () => {
         <Route path="/home" element={<Home />} />
         <Route path="/find_climbers" element={<FindClimbers />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/search-indoor/:level" element={<SearchIndoor />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </div>
