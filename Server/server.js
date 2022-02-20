@@ -20,7 +20,7 @@ app.use(
   })
 );
 
-app.use('/images', express.static(__dirname + '/Images'))
+app.use("/images", express.static(__dirname + "/Images"));
 
 app.listen(process.env.port, () => {
   console.log(`Listening on ${process.env.port}`);
@@ -100,12 +100,11 @@ const authenticateToken = (req, res, next) => {
   }
 };
 
-
 //AUTHENTICATION
 
 app.get("/authentication", authenticateToken, async (req, res) => {
   const username = req.user.username;
-  
+
   const allUserInfo = await db("users")
     .select("user_id", "first_name")
     .where("username", username);
@@ -115,10 +114,9 @@ app.get("/authentication", authenticateToken, async (req, res) => {
     .select("filename")
     .where("username", username);
 
-
   const fileName = image[0]?.filename;
-  const imageFile = 'http://localhost:5000/images/' +  image[0]?.filename;
- 
+  const imageFile = "http://localhost:5000/images/" + image[0]?.filename;
+
   res.json({ allUserInfo: allUserInfo[0], imageFile: imageFile });
 });
 
@@ -169,7 +167,7 @@ app.post("/login", async (req, res) => {
 
 const generateAccessToken = (user) => {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "30m",
+    expiresIn: "300m",
   });
 };
 //REFRESH TOKEN
@@ -215,7 +213,7 @@ app.post("/upload", (req, res) => {
 
       if (error) {
         res.send({
-         error:
+          error:
             "Sorry only png, jpg, and jpeg files allowed. Please try uploading something else!",
         });
       } else {
@@ -234,42 +232,41 @@ app.post("/upload", (req, res) => {
   });
 });
 
+app.post("/data", async (req, res) => {
+  const current_city = req.body.current_city;
+  const climbing_preference = req.body.climbing_preference;
+  const bouldering = req.body.bouldering;
+  const top_rope = req.body.top_rope;
+  const lead_climb = req.body.lead_climb;
+  const user_id = req.body.user_id;
+  console.log(user_id);
+  try {
+    await db("data").where("user_data_id", user_id).del();
+    await db("data")
+      .where("user_data_id", user_id)
+      .insert({
+        current_city: current_city,
+        climbing_preference: climbing_preference,
+        bouldering: bouldering,
+        top_rope: top_rope,
+        lead_climb: lead_climb,
+        user_data_id: user_id,
+      })
+      .into("data");
+  } catch (error) {
+    console.log(error);
+  }
+});
 
-app.post('/data', async (req, res) => {
- const current_city = req.body.current_city;
- const climbing_preference = req.body.climbing_preference;
- const bouldering = req.body.bouldering;
- const top_rope = req.body.top_rope;
- const lead_climb= req.body.lead_climb;
- const user_id = req.body.user_id;
- console.log(user_id)
- try {
-  await db("data").where("user_data_id", user_id).del();
-        await db("data")
-          .where("user_data_id", user_id)
-          .insert({
-            current_city: current_city,
-            climbing_preference: climbing_preference,
-            bouldering: bouldering,
-            top_rope: top_rope,
-            lead_climb: lead_climb,
-            user_data_id: user_id
-          })
-          .into("data");
+app.get('/select-users' , (req, res) => {
+const user_id = req.query.searchField
+console.log(user_id)
+  try {
     
- } catch (error) {
-   console.log(error)
- }
-
-
-
-
-
+  } catch (error) {
+    console.log(error)
+  }
 })
-
-
-
-
 
 // fetch('http://api.amp.active.com/v2/search/?near=california&current_page=1&per_page=10&sort=distance&exclude_children=true&api_key=ps36nt6jjz6g7mhgwa7h9fx9')
 //   .then(response => response)
