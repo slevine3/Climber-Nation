@@ -27,7 +27,7 @@ const App = () => {
       (error) => {
         if (error.response.status !== 200) {
           localStorage.removeItem("token");
-          navigate('/login') 
+          navigate(1) 
         }
       }
     );
@@ -50,7 +50,7 @@ const App = () => {
         <Route path="/home" element={<Home />} />
         <Route path="/find_climbers" element={<FindClimbers />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/search-indoor/:fieldData" element={<SearchIndoor />} />
+        <Route path="/search-indoor" element={<SearchIndoor />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </div>

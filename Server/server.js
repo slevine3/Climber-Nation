@@ -167,7 +167,7 @@ app.post("/login", async (req, res) => {
 
 const generateAccessToken = (user) => {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "300m",
+    expiresIn: "30m",
   });
 };
 //REFRESH TOKEN
@@ -258,15 +258,22 @@ app.post("/data", async (req, res) => {
   }
 });
 
-app.get('/select-users' , (req, res) => {
-const user_id = req.query.searchField
-console.log(user_id)
+app.get("/select-users", async (req, res) => {
+  const user_search = req.query;
+
   try {
-    
+    const image = await db("images")
+      .innerJoin("users", "images.image_id", "users.user_id")
+      .select("*");
+
+    const imageFile = image;
+    console.log(imageFile);
+
+    res.json({ imageFile: imageFile });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
+});
 
 // fetch('http://api.amp.active.com/v2/search/?near=california&current_page=1&per_page=10&sort=distance&exclude_children=true&api_key=ps36nt6jjz6g7mhgwa7h9fx9')
 //   .then(response => response)

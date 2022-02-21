@@ -2,8 +2,6 @@ import { useState } from "react";
 import { NavBar } from "../Navigation/NavBar";
 import { useParams } from "react-router-dom";
 
-
-
 import axios from "axios";
 export const SearchIndoor = (event) => {
   const [climbType, setClimbType] = useState(null);
@@ -11,36 +9,34 @@ export const SearchIndoor = (event) => {
   const [climbLevelUpper, setClimbLevelUpper] = useState(null);
   const [indoorPartner, setIndoorPartner] = useState(null);
 
-  const params = useParams();
-  const  searchField = params.indoorPartner;
-console.log(climbType)
-console.log(climbLevelLower)
-console.log(climbLevelUpper)
+  console.log(indoorPartner);
   const handleSubmit = () => {
-axios
+    axios
       .get("http://localhost:5000/select-users", {
-        params: {
-          searchField: searchField
-        },
+        headers: { climbType: climbType },
       })
-
-      .then((response) => console.log(response))
+      .then((response) => setIndoorPartner(response.data.imageFile))
       .catch((error) => console.log(error));
   };
 
   return (
     <div>
       <NavBar />
+
       <div>
         <h2>Search For an Indoor Partner</h2>
       </div>
       <div>
         <h4>I am looking for someone to</h4>
       </div>
-        
+
       <div>
-        <select onChange={(event) => setClimbType(event.target.value)}>
-          <option selected disabled>
+        <select
+          name="climbType"
+          defaultValue=""
+          onChange={(event) => setClimbType(event.target.value)}
+        >
+          <option value="" disabled>
             Choose one
           </option>
           <option>Boulder</option>
@@ -60,7 +56,10 @@ axios
         </div>
 
         <div>
-          <select onChange={(event) => setClimbLevelLower(event.target.value)}
+          <select
+            defaultValue=""
+            name="climbLevelLower"
+            onChange={(event) => setClimbLevelLower(event.target.value)}
             style={{
               display:
                 climbType === null ||
@@ -70,7 +69,7 @@ axios
                   : "block",
             }}
           >
-            <option selected disabled>
+            <option value="" disabled>
               Choose one
             </option>
             <option>V0</option>
@@ -88,7 +87,10 @@ axios
         </div>
 
         <div>
-          <select onChange={(event) => setClimbLevelLower(event.target.value)}
+          <select
+            defaultValue=""
+            name="climbLevelLower"
+            onChange={(event) => setClimbLevelLower(event.target.value)}
             style={{
               display:
                 climbType === null || climbType === "Boulder"
@@ -96,7 +98,7 @@ axios
                   : "block",
             }}
           >
-            <option selected disabled>
+            <option value="" disabled>
               Choose one
             </option>
             <option>5.5 - 5.9</option>
@@ -117,7 +119,10 @@ axios
         </div>
         <h4>AND</h4>
         <div>
-          <select onChange={(event) => setClimbLevelUpper(event.target.value)}
+          <select
+            defaultValue=""
+            name="climbLevelUpper"
+            onChange={(event) => setClimbLevelUpper(event.target.value)}
             style={{
               display:
                 climbType === null ||
@@ -127,7 +132,7 @@ axios
                   : "block",
             }}
           >
-            <option selected disabled>
+            <option value="" disabled>
               Choose one
             </option>
             <option>V0</option>
@@ -144,7 +149,10 @@ axios
           </select>
         </div>
         <div>
-          <select  onChange={(event) => setClimbLevelUpper(event.target.value)}
+          <select
+            defaultValue=""
+            name="climbLevelUpper"
+            onChange={(event) => setClimbLevelUpper(event.target.value)}
             style={{
               display:
                 climbType === null || climbType === "Boulder"
@@ -152,7 +160,7 @@ axios
                   : "block",
             }}
           >
-            <option selected disabled>
+            <option value="" disabled>
               Choose one
             </option>
             <option>5.5 - 5.9</option>
@@ -173,6 +181,24 @@ axios
         </div>
         <button onClick={handleSubmit}>Search!</button>
       </div>
+
+      {indoorPartner === null
+        ? null
+        : indoorPartner.map((data, i) => {
+            return (
+              <div>
+                <img
+                  key={i}
+                  className="profile_image"
+                  type="file"
+                  name="image"
+                  src={"http://localhost:5000/images/" + data.filename}
+                  alt="profile image"
+                ></img>
+                <h3>{data.first_name}</h3>
+              </div>
+            );
+          })}
     </div>
   );
 };

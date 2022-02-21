@@ -7,7 +7,7 @@ export const ChooseIndoor = () => {
   return (
     <div className="indoor_container">
       <div>
-        <Link to={`/search-indoor/`}>
+        <Link to={`/search-indoor`}>
           <img className="indoor_image" src={indoor} alt="indoor"></img>
         </Link>
       </div>
