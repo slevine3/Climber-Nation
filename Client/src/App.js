@@ -16,6 +16,8 @@ import "./components/Sign-In/Register.css";
 import "./components/Navigation/NavBar.css";
 import "./components/Navigation/Home.css";
 import "./components/Navigation/Profile.css";
+import './components/FindClimbers/Search.css'
+
 import { SearchIndoor } from "./components/FindClimbers/SearchIndoor";
 
 const App = () => {

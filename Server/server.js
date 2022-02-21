@@ -259,17 +259,20 @@ app.post("/data", async (req, res) => {
 });
 
 app.get("/select-users", async (req, res) => {
-  const user_search = req.query;
-
+  const climbType = req.query.climbType;
+  const climbLevel = req.query.climbLevel;
+console.log(climbType)
+console.log(climbLevel)
   try {
     const image = await db("images")
       .innerJoin("users", "images.image_id", "users.user_id")
-      .select("*");
+      .innerJoin("data", "images.image_id", "data.user_data_id")
+      .select("*")
+      .where(climbType, climbLevel)
 
-    const imageFile = image;
-    console.log(imageFile);
+      console.log(image)
 
-    res.json({ imageFile: imageFile });
+    res.json({ imageFile: image });
   } catch (error) {
     console.log(error);
   }
