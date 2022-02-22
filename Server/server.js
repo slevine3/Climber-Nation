@@ -14,8 +14,9 @@ app.use(express.urlencoded());
 app.use(express.json());
 app.use(
   cors({
+    header: "Content-Type: application/json",
     credentials: true,
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000"],
     methods: ["GET", "POST"],
   })
 );
@@ -45,21 +46,21 @@ app.post("/register", async (req, res) => {
   try {
     const first_name = req.body.first_name;
     const username = req.body.username;
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const password = hashedPassword;
-
     const userExists = await db("users")
       .select("username")
       .where("username", username);
 
-    if (!first_name || !username || !password) {
-      res.send("Sorry, please enter all fields");
+    if (!first_name || !username || !req.body.password) {
       return;
     } else if (userExists[0]?.username === username) {
-      res.send("Sorry, this user already exists");
-
+      res.send("This user already exists");
+      return;
+    } else if (req.body.password.length < 6) {
+      res.send("Please use a longer password");
       return;
     } else {
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      const password = hashedPassword;
       await db("users")
         .returning(["first_name", "username", "password"])
         .insert({
@@ -149,20 +150,20 @@ app.post("/login", async (req, res) => {
     .where("username", username);
   try {
     if (username !== userExists[0]?.username) {
-      res.send("Sorry this username does not exist");
+      res.send("This username does not exist");
     } else if (!password) {
-      res.send("You must enter a password!");
+      res.send("Please enter a password");
     } else if (
       (await bcrypt.compare(password, userPassword[0].password)) &&
       username === userExists[0].username
     ) {
       //ACCESS TOKEN
       const accessToken = generateAccessToken(userExists[0]);
-      // const refreshToken = jwt.sign(userExists[0], process.env.REFRESH_TOKEN_SECRET);
+
       res.json({
         auth: true,
         accessToken: accessToken,
-        // refreshToken: refreshToken,
+
         username: username,
       });
 
@@ -178,16 +179,9 @@ app.post("/login", async (req, res) => {
 
 const generateAccessToken = (user) => {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "30m",
+    expiresIn: "300m",
   });
 };
-//REFRESH TOKEN
-
-// app.post("/token", (req, res) => {
-// const refreshToken = req.body.token;
-// if (refreshToken == null) return res.sendStatus(401)
-
-// });
 
 const fileStorageEngine = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -304,10 +298,3 @@ app.get("/select-outdoor-users", async (req, res) => {
     console.log(error);
   }
 });
-
-// fetch('http://api.amp.active.com/v2/search/?near=california&current_page=1&per_page=10&sort=distance&exclude_children=true&api_key=ps36nt6jjz6g7mhgwa7h9fx9')
-//   .then(response => response)
-//   .then(data => {
-//     console.log(data)
-//   })
-//   .catch(err => console.log(err))

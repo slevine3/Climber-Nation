@@ -8,10 +8,10 @@ export const SearchOutdoor = (event) => {
   const [climbType, setClimbType] = useState(null);
   const [climbLevel, setClimbLevel] = useState(null);
   const [outdoorPartner, setOutdoor] = useState(null);
+  const [weatherData, setWeatherData] = useState(null);
   const [userWeatherSearch, setUserWeatherSearch] = useState(null);
   const [todayWeatherMax, setTodayWeatherMax] = useState(null);
   const [todayWeatherMin, setTodayWeatherMin] = useState(null);
-
   const [tomorrowWeatherMax, setTomorrowWeatherMax] = useState(null);
   const [tomorrowWeatherMin, setTomorrowWeatherMin] = useState(null);
 
@@ -86,15 +86,16 @@ export const SearchOutdoor = (event) => {
           `http://api.openweathermap.org/geo/1.0/direct?q=${userWeatherSearch}&limit=1&appid=1984e1e45536c054ce01326660f174a3`
         )
         .then((response) => {
-          console.log(response.data.length);
           if (response.data.length === 0) {
-           return <h1>Please check your spelling</h1>;
+            return setWeatherData("possibleSpellingError");
           } else {
             axios
               .get(
                 `https://api.openweathermap.org/data/2.5/onecall?exclude=minutely,hourly&units=imperial&lat=${response.data[0]?.lat}&lon=${response.data[0]?.lon}&appid=1984e1e45536c054ce01326660f174a3`
               )
               .then((response) => {
+                setWeatherData("Display");
+
                 setTodayWeatherMax(response.data.daily[0].temp.max);
                 setTodayWeatherMin(response.data.daily[0].temp.min);
 
@@ -110,6 +111,28 @@ export const SearchOutdoor = (event) => {
       console.log(error);
     }
   };
+
+  const weatherResults = () => {
+    if (weatherData === null) {
+      return null;
+    } else if (weatherData === "possibleSpellingError") {
+      return <h1>Please check your spelling</h1>;
+    }
+  };
+
+  // const fetchCampground = () => {
+  //   try {
+  //     axios
+  //       .get("http://localhost:5000/camping")
+  //       .then((results) => console.log(results));
+  //   } catch (error) {}
+  // };
+
+  // const fetchTrails = () => {
+  //   axios
+  //     .get("http://localhost:5000/trails")
+  //     .then((response) => console.log(response));
+  // };
 
   return (
     <div>
@@ -226,23 +249,36 @@ export const SearchOutdoor = (event) => {
       <div>
         <button onClick={fetchWeather}>Fetch Weather</button>
       </div>
-      <div className="weatherContainer">
-        <div>
-          <h3>Today</h3>
-          <h4>High: {todayWeatherMax}</h4>
-          <h4>Low: {todayWeatherMin}</h4>
-        </div>
-        <div>
-          <h3>{tomorrow}</h3>
-          <h4>High: {tomorrowWeatherMax}</h4>
-          <h4>Low: {tomorrowWeatherMin}</h4>
-        </div>
-        <div>
-          <h3>{dayAfterTomorrow}</h3>
-          <h4>High: {dayAfterTomorrowWeatherMax}</h4>
-          <h4>Low: {dayAfterTomorrowWeatherMin}</h4>
-        </div>
+      {/* <div>
+        <button onClick={fetchCampground}>Fetch Campground</button>
       </div>
+      <div>
+        <button onClick={fetchTrails}>Fetch Trails</button>
+      </div> */}
+      {weatherResults() === undefined ? (
+        <div className="weatherContainer">
+          <div>
+            <h1>{userWeatherSearch}</h1>
+          </div>
+          <div>
+            <h3>Today</h3>
+            <h4>High: {todayWeatherMax}</h4>
+            <h4>Low: {todayWeatherMin}</h4>
+          </div>
+          <div>
+            <h3>{tomorrow}</h3>
+            <h4>High: {tomorrowWeatherMax}</h4>
+            <h4>Low: {tomorrowWeatherMin}</h4>
+          </div>
+          <div>
+            <h3>{dayAfterTomorrow}</h3>
+            <h4>High: {dayAfterTomorrowWeatherMax}</h4>
+            <h4>Low: {dayAfterTomorrowWeatherMin}</h4>
+          </div>
+        </div>
+      ) : (
+        weatherResults()
+      )}
     </div>
   );
 };

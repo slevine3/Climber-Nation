@@ -15,7 +15,7 @@ const Profile = () => {
   const [bouldering, setBouldering] = useState(null);
   const [top_rope, setTopRope] = useState(null);
   const [lead_climb, setLeadClimb] = useState(null);
-
+  const [dataSubmitted, setDataSubmitted] = useState(null);
   const handleOnChange = (event) => {
     setFile(event.target.files[0]);
   };
@@ -65,6 +65,7 @@ const Profile = () => {
 
   const handleData = async (event) => {
     event.preventDefault();
+    setDataSubmitted("Your data has been submitted!");
 
     axios
       .post("http://localhost:5000/data", {
@@ -259,6 +260,9 @@ const Profile = () => {
         </div>
         <div>
           <button onClick={handleData}>Submit Data</button>
+        </div>
+        <div>
+          <h2>{dataSubmitted}</h2>
         </div>
       </div>
     </div>

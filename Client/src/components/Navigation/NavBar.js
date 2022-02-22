@@ -4,7 +4,9 @@ export const NavBar = () => {
   return (
     <div className="nav_container">
       <div className="logo">
-        <h3>ClimberNation</h3>
+        <a href="/home">
+          <h3 className="logo_name">ClimberNation</h3>
+        </a>
       </div>
       <div className="nav_bar">
         <div className="nav_link">

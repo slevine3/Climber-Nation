@@ -8,7 +8,8 @@ const Login = (props) => {
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
   const [first_name, setFirstName] = useState("");
-  const [message, setMessage] = useState(null);
+  const [usernameError, setUsernameError] = useState(null);
+  const [passwordError, setPasswordError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -23,7 +24,13 @@ const Login = (props) => {
           localStorage.setItem("token", response.data.accessToken);
           authenticateUser();
         } else {
-          setMessage(response.data);
+          if (response.data === "This username does not exist") {
+            setUsernameError("This username does not exist");
+            setPasswordError(null);
+          } else {
+            setUsernameError(null);
+            setPasswordError(response.data);
+          }
         }
       })
       .catch(function (error) {
@@ -53,7 +60,7 @@ const Login = (props) => {
         <div>
           <h3>Login</h3>
         </div>
-        <div>
+        <div className="login_username">
           <label htmlFor="username">Username</label>
         </div>
         <div>
@@ -63,9 +70,11 @@ const Login = (props) => {
             type="text"
           ></input>
         </div>
-        <div>
+        <div className="login_message">{usernameError}</div>
+        <div className="login_password">
           <label htmlFor="password">Password</label>
         </div>
+
         <div>
           <input
             onChange={(event) => setPassword(event.target.value)}
@@ -73,16 +82,17 @@ const Login = (props) => {
             type="text"
           ></input>
         </div>
-
+        <div className="login_message">{passwordError}</div>
         <div>
           <button className="input_button" type="submit" onClick={handleSubmit}>
             Login
           </button>
         </div>
         <div>
-          <a href="/register">Don't have an account? Click here to sign up</a>
+          <a className="login_href" href="/register">
+            Register Here!
+          </a>
         </div>
-        <div>{message}</div>
       </div>
     </div>
   );
