@@ -114,10 +114,21 @@ app.get("/authentication", authenticateToken, async (req, res) => {
     .select("filename")
     .where("username", username);
 
-  const fileName = image[0]?.filename;
   const imageFile = "http://localhost:5000/images/" + image[0]?.filename;
 
   res.json({ allUserInfo: allUserInfo[0], imageFile: imageFile });
+});
+
+app.get("/fetch-image", async (req, res) => {
+  const user_id = req.query.user_id;
+  const image = await db("images")
+    .innerJoin("users", "images.image_id", "users.user_id")
+    .select("filename")
+    .where("user_id", user_id);
+
+  const imageFile = "http://localhost:5000/images/" + image[0]?.filename;
+
+  res.json({ imageFile: imageFile });
 });
 
 //LOGIN
@@ -258,19 +269,35 @@ app.post("/data", async (req, res) => {
   }
 });
 
-app.get("/select-users", async (req, res) => {
+app.get("/select-indoor-users", async (req, res) => {
   const climbType = req.query.climbType;
   const climbLevel = req.query.climbLevel;
-console.log(climbType)
-console.log(climbLevel)
+
   try {
     const image = await db("images")
       .innerJoin("users", "images.image_id", "users.user_id")
       .innerJoin("data", "images.image_id", "data.user_data_id")
       .select("*")
       .where(climbType, climbLevel)
+      .whereNot("climbing_preference", "Outdoor");
 
-      console.log(image)
+    res.json({ imageFile: image });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.get("/select-outdoor-users", async (req, res) => {
+  const climbType = req.query.climbType;
+  const climbLevel = req.query.climbLevel;
+
+  try {
+    const image = await db("images")
+      .innerJoin("users", "images.image_id", "users.user_id")
+      .innerJoin("data", "images.image_id", "data.user_data_id")
+      .select("*")
+      .where(climbType, climbLevel)
+      .whereNot("climbing_preference", "Indoor");
 
     res.json({ imageFile: image });
   } catch (error) {

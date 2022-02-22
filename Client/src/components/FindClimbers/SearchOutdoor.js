@@ -4,28 +4,53 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import default_profile from "../Navigation/default_profile.png";
 
-export const SearchIndoor = (event) => {
+export const SearchOutdoor = (event) => {
   const [climbType, setClimbType] = useState(null);
   const [climbLevel, setClimbLevel] = useState(null);
+  const [outdoorPartner, setOutdoor] = useState(null);
+  const [userWeatherSearch, setUserWeatherSearch] = useState(null);
+  const [todayWeatherMax, setTodayWeatherMax] = useState(null);
+  const [todayWeatherMin, setTodayWeatherMin] = useState(null);
 
-  const [indoorPartner, setIndoorPartner] = useState(null);
+  const [tomorrowWeatherMax, setTomorrowWeatherMax] = useState(null);
+  const [tomorrowWeatherMin, setTomorrowWeatherMin] = useState(null);
+
+  const [dayAfterTomorrowWeatherMax, setDayAfterTomorrowWeatherMax] =
+    useState(null);
+  const [dayAfterTomorrowWeatherMin, setDayAfterTomorrowWeatherMin] =
+    useState(null);
+
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const dateToday = new Date();
+  const dayToday = dateToday.getDay();
+  const today = daysOfWeek[dayToday];
+  const tomorrow = daysOfWeek[dayToday + 1];
+  const dayAfterTomorrow = daysOfWeek[dayToday + 2];
 
   const handleSubmit = () => {
     axios
-      .get("http://localhost:5000/select-indoor-users", {
+      .get("http://localhost:5000/select-outdoor-users", {
         params: { climbType: climbType, climbLevel: climbLevel },
       })
-      .then((response) => setIndoorPartner(response.data.imageFile))
+      .then((response) => setOutdoor(response.data.imageFile))
       .catch((error) => console.log(error));
   };
 
-  const renderElement = () => {
-    if (indoorPartner === null) {
+  const renderUsers = () => {
+    if (outdoorPartner === null) {
       return null;
-    } else if (indoorPartner.length === 0) {
+    } else if (outdoorPartner.length === 0) {
       return <h1>Sorry, no friends available</h1>;
     } else {
-      return indoorPartner.map((data, i) => {
+      return outdoorPartner.map((data, i) => {
         console.log(data);
         return (
           <div className="user_profile_container" key={i}>
@@ -34,7 +59,11 @@ export const SearchIndoor = (event) => {
                 className="profile_image"
                 type="file"
                 name="image"
-                src={data.filename !== null ? "http://localhost:5000/images/" + data.filename : default_profile}
+                src={
+                  data.filename !== null
+                    ? "http://localhost:5000/images/" + data.filename
+                    : default_profile
+                }
                 alt="profile image"
               ></img>
               <div className="user_info">
@@ -50,12 +79,44 @@ export const SearchIndoor = (event) => {
     }
   };
 
+  const fetchWeather = () => {
+    try {
+      axios
+        .get(
+          `http://api.openweathermap.org/geo/1.0/direct?q=${userWeatherSearch}&limit=1&appid=1984e1e45536c054ce01326660f174a3`
+        )
+        .then((response) => {
+          console.log(response.data.length);
+          if (response.data.length === 0) {
+           return <h1>Please check your spelling</h1>;
+          } else {
+            axios
+              .get(
+                `https://api.openweathermap.org/data/2.5/onecall?exclude=minutely,hourly&units=imperial&lat=${response.data[0]?.lat}&lon=${response.data[0]?.lon}&appid=1984e1e45536c054ce01326660f174a3`
+              )
+              .then((response) => {
+                setTodayWeatherMax(response.data.daily[0].temp.max);
+                setTodayWeatherMin(response.data.daily[0].temp.min);
+
+                setTomorrowWeatherMax(response.data.daily[1].temp.max);
+                setTomorrowWeatherMin(response.data.daily[1].temp.min);
+
+                setDayAfterTomorrowWeatherMax(response.data.daily[2].temp.max);
+                setDayAfterTomorrowWeatherMin(response.data.daily[2].temp.min);
+              });
+          }
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div>
       <NavBar />
 
       <div>
-        <h2>Search For an Indoor Partner</h2>
+        <h2>Search For an Outdoor Partner</h2>
       </div>
       <div>
         <h4>I am looking for someone to</h4>
@@ -150,7 +211,38 @@ export const SearchIndoor = (event) => {
         </div>
         <button onClick={handleSubmit}>Search!</button>
       </div>
-      {renderElement()}
+      {renderUsers()}
+
+      <div>
+        <h1>Plan a climbing trip</h1>
+      </div>
+      <div>Search a city</div>
+      <div>
+        <input
+          type="text"
+          onChange={(event) => setUserWeatherSearch(event.target.value)}
+        ></input>
+      </div>
+      <div>
+        <button onClick={fetchWeather}>Fetch Weather</button>
+      </div>
+      <div className="weatherContainer">
+        <div>
+          <h3>Today</h3>
+          <h4>High: {todayWeatherMax}</h4>
+          <h4>Low: {todayWeatherMin}</h4>
+        </div>
+        <div>
+          <h3>{tomorrow}</h3>
+          <h4>High: {tomorrowWeatherMax}</h4>
+          <h4>Low: {tomorrowWeatherMin}</h4>
+        </div>
+        <div>
+          <h3>{dayAfterTomorrow}</h3>
+          <h4>High: {dayAfterTomorrowWeatherMax}</h4>
+          <h4>Low: {dayAfterTomorrowWeatherMin}</h4>
+        </div>
+      </div>
     </div>
   );
 };

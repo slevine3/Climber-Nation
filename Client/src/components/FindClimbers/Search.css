@@ -12,3 +12,8 @@
 .user_info {
   margin-left: 50px;
 }
+.weatherContainer {
+  display: flex;
+  justify-content: space-around;
+  border: 3px solid black;
+}

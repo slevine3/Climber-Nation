@@ -51,19 +51,18 @@ const Profile = () => {
   };
 
   const fetchImage = () => {
-    try {
-      axios
-        .get("http://localhost:5000/authentication", {
-          headers: { authorization: localStorage.getItem("token") },
-        })
-        .then((response) => {
-          localStorage.setItem("imageFile", response.data.imageFile);
-          window.location.reload();
-        });
-    } catch (error) {
-      console.log(error);
-    }
+    console.log(localStorage.getItem("user_id"));
+    axios
+      .get("http://localhost:5000/fetch-image", {
+        params: { user_id: localStorage.getItem("user_id") },
+      })
+      .then((response) => {
+        localStorage.setItem("imageFile", response.data.imageFile);
+        window.location.reload();
+      })
+      .catch(error);
   };
+
   const handleData = async (event) => {
     event.preventDefault();
 
@@ -136,10 +135,11 @@ const Profile = () => {
             </div>
             <div>
               <select
+                defaultValue=""
                 onChange={(event) => setCurrentCity(event.target.value)}
                 className="select"
               >
-                <option selected disabled>
+                <option value="" disabled>
                   Choose one
                 </option>
                 <option>New York City</option>
@@ -156,10 +156,11 @@ const Profile = () => {
             </div>
             <div>
               <select
+                defaultValue=""
                 onChange={(event) => setClimbingPreference(event.target.value)}
                 className="select"
               >
-                <option selected disabled>
+                <option value="" disabled>
                   Choose one
                 </option>
                 <option>Indoor</option>
@@ -174,10 +175,11 @@ const Profile = () => {
             </div>
             <div>
               <select
+                defaultValue=""
                 onChange={(event) => setBouldering(event.target.value)}
                 className="select"
               >
-                <option selected disabled>
+                <option value="" disabled>
                   Choose one
                 </option>
                 <option>V0</option>
@@ -201,10 +203,11 @@ const Profile = () => {
             </div>
             <div>
               <select
+                defaultValue=""
                 onChange={(event) => setTopRope(event.target.value)}
                 className="select"
               >
-                <option selected disabled>
+                <option value="" disabled>
                   Choose one
                 </option>
                 <option>5.5 - 5.9</option>
@@ -232,8 +235,8 @@ const Profile = () => {
               <h4>Lead Climb</h4>
             </div>
             <div>
-              <select className="select">
-                <option selected disabled>
+              <select defaultValue="" className="select">
+                <option value="" disabled>
                   Choose one
                 </option>
                 <option>5.5 - 5.9</option>

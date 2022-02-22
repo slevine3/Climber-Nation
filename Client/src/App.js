@@ -19,7 +19,7 @@ import "./components/Navigation/Profile.css";
 import './components/FindClimbers/Search.css'
 
 import { SearchIndoor } from "./components/FindClimbers/SearchIndoor";
-
+import { SearchOutdoor } from "./components/FindClimbers/SearchOutdoor";
 const App = () => {
 
   const navigate = useNavigate();
@@ -53,6 +53,7 @@ const App = () => {
         <Route path="/find_climbers" element={<FindClimbers />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/search-indoor" element={<SearchIndoor />} />
+        <Route path="/search-outdoor" element={<SearchOutdoor />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </div>
