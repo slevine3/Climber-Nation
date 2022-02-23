@@ -1,6 +1,6 @@
 import indoor from "./indoor.jpg";
 import { Link } from "react-router-dom";
-import { SearchIndoor } from "./SearchIndoor";
+import { SearchIndoor } from "./SearchUsers";
 import { connect } from "react-redux";
 export const ChooseIndoor = () => {
   const user_id = localStorage.getItem('user_id')

@@ -51,7 +51,7 @@ app.post("/register", async (req, res) => {
       .where("username", username);
 
     if (!first_name || !username || !req.body.password) {
-      res.send(null)
+      res.send(null);
     } else if (userExists[0]?.username === username) {
       res.send("username exists");
       return;
@@ -263,7 +263,8 @@ app.post("/data", async (req, res) => {
   }
 });
 
-app.get("/select-indoor-users", async (req, res) => {
+app.get("/select-users", async (req, res) => {
+  const climbing_preference = req.query.climbPreference;
   const climbType = req.query.climbType;
   const climbLevel = req.query.climbLevel;
 
@@ -275,25 +276,36 @@ app.get("/select-indoor-users", async (req, res) => {
       .where(climbType, climbLevel)
       .whereNot("climbing_preference", "Outdoor");
 
+    // const user_id = await db("users")
+    // .innerJoin("users", "images.image_id", "users.user_id")
+    // .select("*")
+    // .where(climbType, climbLevel)
+    // .whereNot("climbing_preference", "Outdoor");
+
     res.json({ imageFile: image });
   } catch (error) {
     console.log(error);
   }
 });
 
-app.get("/select-outdoor-users", async (req, res) => {
-  const climbType = req.query.climbType;
-  const climbLevel = req.query.climbLevel;
+app.get("/visit_user_profile", async (req, res) => {
+  const visiting_user_id = req.query.visiting_user_id;
 
   try {
-    const image = await db("images")
+    const allUserData = await db("images")
       .innerJoin("users", "images.image_id", "users.user_id")
       .innerJoin("data", "images.image_id", "data.user_data_id")
       .select("*")
-      .where(climbType, climbLevel)
-      .whereNot("climbing_preference", "Indoor");
+      .where("user_id", visiting_user_id);
 
-    res.json({ imageFile: image });
+    const image = await db("images")
+      .innerJoin("users", "images.image_id", "users.user_id")
+      .select("filename")
+      .where("user_id", visiting_user_id);
+
+    const imageFile = "http://localhost:5000/images/" + image[0]?.filename;
+
+    res.send({ visiting_user_data: allUserData, imageFile: imageFile });
   } catch (error) {
     console.log(error);
   }
