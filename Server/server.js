@@ -51,12 +51,12 @@ app.post("/register", async (req, res) => {
       .where("username", username);
 
     if (!first_name || !username || !req.body.password) {
-      return;
+      res.send(null)
     } else if (userExists[0]?.username === username) {
-      res.send("This user already exists");
+      res.send("username exists");
       return;
     } else if (req.body.password.length < 6) {
-      res.send("Please use a longer password");
+      res.send("longer password");
       return;
     } else {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);

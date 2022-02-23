@@ -8,7 +8,7 @@ export const Register = () => {
   const [firstNameError, setFirstNameError] = useState(null);
   const [usernameError, setUsernameError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
-
+  const [message, setMessage] = useState(null);
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -27,10 +27,23 @@ export const Register = () => {
           setFirstNameError(null);
           setUsernameError("Please enter a username");
           setPasswordError(null);
-        } else {
+        } else if (!password) {
           setFirstNameError(null);
           setUsernameError(null);
           setPasswordError("Please enter a password");
+        } else if (response.data === "username exists") {
+          setFirstNameError(null);
+          setUsernameError("This user already exists");
+          setPasswordError(null);
+        } else if (response.data === "longer password") {
+          setFirstNameError(null);
+          setUsernameError(null);
+          setPasswordError("Password must be at least 6 characters");
+        } else if (response.data === "Account Created!") {
+          setFirstNameError(null);
+          setUsernameError(null);
+          setPasswordError(null);
+          setMessage(response.data);
         }
       })
       .catch(function (error) {
@@ -81,7 +94,7 @@ export const Register = () => {
             ></input>
             <div className="register_message">{passwordError}</div>
           </div>
-
+          <div className="register_message">{message}</div>
           <div>
             <button
               className="register_button"
