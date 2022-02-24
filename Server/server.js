@@ -298,7 +298,7 @@ app.get("/select-users", async (req, res) => {
 
   try {
     await fetch(
-      `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${city}&destinations=${mappedCities}&key=AIzaSyAoxp4gDNYEZdDavCOseCj1MUvZnqUSLzw`
+      `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${city}&destinations=${mappedCities}&key=${process.env.GOOGLE_API_KEY}`
     )
       .then((res) => res.json())
       .then((json) =>
