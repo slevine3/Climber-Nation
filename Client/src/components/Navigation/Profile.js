@@ -16,6 +16,8 @@ const Profile = () => {
   const [top_rope, setTopRope] = useState(null);
   const [lead_climb, setLeadClimb] = useState(null);
   const [dataSubmitted, setDataSubmitted] = useState(null);
+  const [zipCode, setZipCode] = useState(null);
+
   const handleOnChange = (event) => {
     setFile(event.target.files[0]);
   };
@@ -65,7 +67,7 @@ const Profile = () => {
 
   const handleData = async (event) => {
     event.preventDefault();
-    setDataSubmitted("Your data has been submitted!");
+    setDataSubmitted("Your Changes Have Been Saved!");
 
     axios
       .post("http://localhost:5000/data", {
@@ -74,6 +76,7 @@ const Profile = () => {
         bouldering: bouldering,
         top_rope: top_rope,
         lead_climb: lead_climb,
+        zipCode: zipCode,
         user_id: localStorage.getItem("user_id"),
       })
       .then((response) => {
@@ -150,7 +153,6 @@ const Profile = () => {
               </select>
             </div>
           </div>
-
           <div>
             <div>
               <h4>Climbing Preference</h4>
@@ -170,6 +172,18 @@ const Profile = () => {
               </select>
             </div>
           </div>
+          <div>
+            <div>
+              <h4>Zip Code</h4>
+            </div>
+            <div>
+              <input
+                onChange={(event) => setZipCode(event.target.value)}
+                className="select"
+              ></input>
+            </div>
+          </div>
+
           <div className="bouldering">
             <div>
               <h4>Bouldering</h4>
@@ -258,11 +272,11 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <div>
-          <button onClick={handleData}>Submit Data</button>
+        <div className="messageAccepted">
+          <h2>{dataSubmitted}</h2>
         </div>
         <div>
-          <h2>{dataSubmitted}</h2>
+          <button onClick={handleData}>Save Changes</button>
         </div>
       </div>
     </div>

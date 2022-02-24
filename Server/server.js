@@ -244,7 +244,9 @@ app.post("/data", async (req, res) => {
   const top_rope = req.body.top_rope;
   const lead_climb = req.body.lead_climb;
   const user_id = req.body.user_id;
-  console.log(user_id);
+  const zip_code = req.body.zipCode
+
+
   try {
     await db("data").where("user_data_id", user_id).del();
     await db("data")
@@ -255,6 +257,7 @@ app.post("/data", async (req, res) => {
         bouldering: bouldering,
         top_rope: top_rope,
         lead_climb: lead_climb,
+        zip_code: zip_code,
         user_data_id: user_id,
       })
       .into("data");
@@ -274,13 +277,7 @@ app.get("/select-users", async (req, res) => {
       .innerJoin("data", "images.image_id", "data.user_data_id")
       .select("*")
       .where(climbType, climbLevel)
-      .whereNot("climbing_preference", "Outdoor");
-
-    // const user_id = await db("users")
-    // .innerJoin("users", "images.image_id", "users.user_id")
-    // .select("*")
-    // .where(climbType, climbLevel)
-    // .whereNot("climbing_preference", "Outdoor");
+      .where("climbing_preference", climbing_preference);
 
     res.json({ imageFile: image });
   } catch (error) {

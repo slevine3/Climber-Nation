@@ -6,6 +6,7 @@
 }
 .profile_image {
   display: flex;
+  pointer-events: none;
   margin: 30px 0px 0px 30px;
   width: 200px;
   border-radius: 50%;
@@ -23,4 +24,7 @@
   height: 50px;
   font-size: 24px;
   text-align: center;
+}
+.messageAccepted{
+  color: green;
 }

@@ -2,14 +2,13 @@ import { useState } from "react";
 import axios from "axios";
 import default_profile from "../Navigation/default_profile.png";
 import { UserProfile } from "../Navigation/UserProfile";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 export const SearchUsers = (event) => {
   const [climbPreference, setClimbPreference] = useState(null);
   const [climbType, setClimbType] = useState(null);
   const [climbLevel, setClimbLevel] = useState(null);
   const [climbingPartner, setClimbingPartner] = useState(null);
-  const [isListVisible, setIsListVisible] = useState(null);
+ 
   const navigate = useNavigate();
   const handleSubmit = () => {
     axios
