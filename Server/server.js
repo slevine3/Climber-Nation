@@ -244,8 +244,9 @@ app.post("/data", async (req, res) => {
   const top_rope = req.body.top_rope;
   const lead_climb = req.body.lead_climb;
   const user_id = req.body.user_id;
-  const zip_code = req.body.zipCode
-
+  const zip_code = req.body.zipCode;
+  const my_city = req.body.myCity;
+  console.log(my_city);
 
   try {
     await db("data").where("user_data_id", user_id).del();
@@ -258,6 +259,7 @@ app.post("/data", async (req, res) => {
         top_rope: top_rope,
         lead_climb: lead_climb,
         zip_code: zip_code,
+        my_city: my_city,
         user_data_id: user_id,
       })
       .into("data");
@@ -270,16 +272,38 @@ app.get("/select-users", async (req, res) => {
   const climbing_preference = req.query.climbPreference;
   const climbType = req.query.climbType;
   const climbLevel = req.query.climbLevel;
+  const user_id = req.query.user_id;
+
+  const my_city = await db("data")
+    .select("my_city")
+    .where("user_data_id", user_id);
+  
+  const all_cities = await db("data")
+    .select("my_city")
+    .where(climbType, climbLevel)
+    .where("climbing_preference", climbing_preference)
+    .whereNot("my_city", my_city[0].my_city);
+
+  const mappedCities = all_cities.map((data) => "|" + data.my_city);
+  const city = my_city[0].my_city;
+  console.log(my_city[0].my_city);
+  console.log(mappedCities);
+
+  const image = await db("images")
+    .innerJoin("users", "images.image_id", "users.user_id")
+    .innerJoin("data", "images.image_id", "data.user_data_id")
+    .select("*")
+    .where(climbType, climbLevel)
+    .where("climbing_preference", climbing_preference);
 
   try {
-    const image = await db("images")
-      .innerJoin("users", "images.image_id", "users.user_id")
-      .innerJoin("data", "images.image_id", "data.user_data_id")
-      .select("*")
-      .where(climbType, climbLevel)
-      .where("climbing_preference", climbing_preference);
-
-    res.json({ imageFile: image });
+    await fetch(
+      `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${city}&destinations=${mappedCities}&key=AIzaSyAoxp4gDNYEZdDavCOseCj1MUvZnqUSLzw`
+    )
+      .then((res) => res.json())
+      .then((json) =>
+        res.json({ distance: json.rows[0]?.elements, imageFile: image })
+      );
   } catch (error) {
     console.log(error);
   }
@@ -307,3 +331,7 @@ app.get("/visit_user_profile", async (req, res) => {
     console.log(error);
   }
 });
+
+
+
+// "https://maps.googleapis.com/maps/api/geocode/json?address=92103&92109&key=AIzaSyAoxp4gDNYEZdDavCOseCj1MUvZnqUSLzw"

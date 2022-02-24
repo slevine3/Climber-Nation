@@ -8,7 +8,8 @@ export const SearchUsers = (event) => {
   const [climbType, setClimbType] = useState(null);
   const [climbLevel, setClimbLevel] = useState(null);
   const [climbingPartner, setClimbingPartner] = useState(null);
- 
+  const [distance, setDistance] = useState(null);
+
   const navigate = useNavigate();
   const handleSubmit = () => {
     axios
@@ -17,11 +18,17 @@ export const SearchUsers = (event) => {
           climbPreference: climbPreference,
           climbType: climbType,
           climbLevel: climbLevel,
+          user_id: localStorage.getItem("user_id"),
         },
       })
-      .then((response) => setClimbingPartner(response.data.imageFile))
+      .then((response) => {
+        response.data.distance?.map((element) => setDistance(element.distance?.text.slice(0, -3)));
+        setClimbingPartner(response.data.imageFile);
+      })
+
       .catch((error) => console.log(error));
   };
+
 
   const handleUserProfile = (event) => {
     localStorage.setItem("visiting_user_id", event.target.id);
@@ -57,6 +64,7 @@ export const SearchUsers = (event) => {
                 <h4>Boulder: {data.bouldering}</h4>
                 <h4>Top Rope: {data.top_rope}</h4>
                 <h4>Lead Climb: {data.lead_climb}</h4>
+                <h4>{distance} Miles Away</h4>
               </div>
             </div>
           </div>
@@ -64,6 +72,8 @@ export const SearchUsers = (event) => {
       });
     }
   };
+
+
   return (
     <div>
       <div className="search-container">

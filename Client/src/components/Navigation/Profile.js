@@ -17,6 +17,7 @@ const Profile = () => {
   const [lead_climb, setLeadClimb] = useState(null);
   const [dataSubmitted, setDataSubmitted] = useState(null);
   const [zipCode, setZipCode] = useState(null);
+  const [myCity, setMyCity] = useState(null);
 
   const handleOnChange = (event) => {
     setFile(event.target.files[0]);
@@ -77,6 +78,7 @@ const Profile = () => {
         top_rope: top_rope,
         lead_climb: lead_climb,
         zipCode: zipCode,
+        myCity: myCity,
         user_id: localStorage.getItem("user_id"),
       })
       .then((response) => {
@@ -179,6 +181,17 @@ const Profile = () => {
             <div>
               <input
                 onChange={(event) => setZipCode(event.target.value)}
+                className="select"
+              ></input>
+            </div>
+          </div>
+          <div>
+            <div>
+              <h4>My City</h4>
+            </div>
+            <div>
+              <input
+                onChange={(event) => setMyCity(event.target.value)}
                 className="select"
               ></input>
             </div>
