@@ -282,7 +282,7 @@ app.get("/select-users", async (req, res) => {
     .select("my_city")
     .where(climbType, climbLevel)
     .where("climbing_preference", climbing_preference)
-    .whereNot("my_city", my_city[0].my_city);
+    .whereNot("user_data_id", user_id);
 
   const mappedCities = all_cities.map((data) => "|" + data.my_city);
   const city = my_city[0].my_city;
@@ -294,7 +294,8 @@ app.get("/select-users", async (req, res) => {
     .innerJoin("data", "images.image_id", "data.user_data_id")
     .select("*")
     .where(climbType, climbLevel)
-    .where("climbing_preference", climbing_preference);
+    .where("climbing_preference", climbing_preference)
+    .whereNot("user_id", user_id);
 
   try {
     await fetch(

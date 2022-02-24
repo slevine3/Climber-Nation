@@ -7,7 +7,7 @@ const Home = (props) => {
     <div>
       <NavBar />
       <div>
-        <h1>Welcome {name}</h1>
+        <h1 className="center">Welcome {name}</h1>
       </div>
       <SearchUsers />
     </div>

@@ -124,11 +124,12 @@ const Profile = () => {
                 ></input>
                 <div>{error}</div>
                 <div>
-                  <input
+                  <button
+                  className="button-84"
                     name="image"
                     onClick={handleSubmit}
                     type="submit"
-                  ></input>
+                  >Submit</button>
                 </div>
               </form>
             </div>
@@ -174,17 +175,7 @@ const Profile = () => {
               </select>
             </div>
           </div>
-          <div>
-            <div>
-              <h4>Zip Code</h4>
-            </div>
-            <div>
-              <input
-                onChange={(event) => setZipCode(event.target.value)}
-                className="select"
-              ></input>
-            </div>
-          </div>
+         
           <div>
             <div>
               <h4>My City</h4>
@@ -289,7 +280,7 @@ const Profile = () => {
           <h2>{dataSubmitted}</h2>
         </div>
         <div>
-          <button onClick={handleData}>Save Changes</button>
+          <button className="button-84" onClick={handleData}>Save Changes</button>
         </div>
       </div>
     </div>

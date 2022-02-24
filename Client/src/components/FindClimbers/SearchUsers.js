@@ -22,13 +22,15 @@ export const SearchUsers = (event) => {
         },
       })
       .then((response) => {
-        response.data.distance?.map((element) => setDistance(element.distance?.text.slice(0, -3)));
+        let array = [];
+        response.data.distance?.map((element, i) =>
+          array.push(element.distance?.text.slice(0, -3))
+        );
+        setDistance(array);
         setClimbingPartner(response.data.imageFile);
       })
-
       .catch((error) => console.log(error));
   };
-
 
   const handleUserProfile = (event) => {
     localStorage.setItem("visiting_user_id", event.target.id);
@@ -41,6 +43,7 @@ export const SearchUsers = (event) => {
       return <h1>Sorry, no friends available</h1>;
     } else {
       return climbingPartner.map((data, i) => {
+        const distanceMapped = distance[i]
         return (
           <div className="user_profile_container" key={data.user_id}>
             <div
@@ -64,7 +67,7 @@ export const SearchUsers = (event) => {
                 <h4>Boulder: {data.bouldering}</h4>
                 <h4>Top Rope: {data.top_rope}</h4>
                 <h4>Lead Climb: {data.lead_climb}</h4>
-                <h4>{distance} Miles Away</h4>
+                <h4>{(distanceMapped === undefined) ? "This user is located internationally and distance cannot be determined" : `${distanceMapped} Miles Away`} </h4>
               </div>
             </div>
           </div>
@@ -72,7 +75,6 @@ export const SearchUsers = (event) => {
       });
     }
   };
-
 
   return (
     <div>
@@ -186,7 +188,10 @@ export const SearchUsers = (event) => {
               <option>5.13+</option>
             </select>
           </div>
-          <button onClick={handleSubmit}>Search!</button>
+          <br></br>
+          <button className="button-84" onClick={handleSubmit}>
+            Search!
+          </button>
         </div>
       </div>
       <div className="all_users_container"> {renderUsers()} </div>
