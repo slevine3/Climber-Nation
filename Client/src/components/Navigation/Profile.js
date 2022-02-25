@@ -17,7 +17,7 @@ const Profile = () => {
   const [lead_climb, setLeadClimb] = useState(null);
   const [dataSubmitted, setDataSubmitted] = useState(null);
   const [zipCode, setZipCode] = useState(null);
-  const [myCity, setMyCity] = useState(null);
+ 
 
   const handleOnChange = (event) => {
     setFile(event.target.files[0]);
@@ -78,7 +78,6 @@ const Profile = () => {
         top_rope: top_rope,
         lead_climb: lead_climb,
         zipCode: zipCode,
-        myCity: myCity,
         user_id: localStorage.getItem("user_id"),
       })
       .then((response) => {
@@ -125,35 +124,28 @@ const Profile = () => {
                 <div>{error}</div>
                 <div>
                   <button
-                  className="button-84"
+                    className="center"
                     name="image"
                     onClick={handleSubmit}
                     type="submit"
-                  >Submit</button>
+                  >
+                    Submit
+                  </button>
                 </div>
               </form>
             </div>
           </div>
         </div>
         <div className="user_level_container">
-          <div>
+        <div>
             <div>
-              <h4>Current City</h4>
+              <h4>Zip Code</h4>
             </div>
             <div>
-              <select
-                defaultValue=""
-                onChange={(event) => setCurrentCity(event.target.value)}
+              <input
+                onChange={(event) => setZipCode(event.target.value)}
                 className="select"
-              >
-                <option value="" disabled>
-                  Choose one
-                </option>
-                <option>New York City</option>
-                <option>Tel Aviv</option>
-                <option>San Diego</option>
-                <option>Los Angeles</option>
-              </select>
+              ></input>
             </div>
           </div>
           <div>
@@ -175,18 +167,8 @@ const Profile = () => {
               </select>
             </div>
           </div>
-         
-          <div>
-            <div>
-              <h4>My City</h4>
-            </div>
-            <div>
-              <input
-                onChange={(event) => setMyCity(event.target.value)}
-                className="select"
-              ></input>
-            </div>
-          </div>
+
+          
 
           <div className="bouldering">
             <div>
@@ -280,7 +262,9 @@ const Profile = () => {
           <h2>{dataSubmitted}</h2>
         </div>
         <div>
-          <button className="button-84" onClick={handleData}>Save Changes</button>
+          <button className="button-84" onClick={handleData}>
+            Save Changes
+          </button>
         </div>
       </div>
     </div>

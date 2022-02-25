@@ -7,18 +7,11 @@ const Home = (props) => {
     <div>
       <NavBar />
       <div>
-        <h1 className="center">Welcome {name}</h1>
+        <h1>Welcome {name}</h1>
       </div>
       <SearchUsers />
     </div>
   );
 };
 
-const mapStateToProps = (state) => {
-  // console.log(state.newUserLogIn.first_name);
-  return {
-    // first_name: state.newUserLogIn.first_name
-  };
-};
-
-export default connect(mapStateToProps)(Home);
+export default Home;

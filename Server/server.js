@@ -245,8 +245,6 @@ app.post("/data", async (req, res) => {
   const lead_climb = req.body.lead_climb;
   const user_id = req.body.user_id;
   const zip_code = req.body.zipCode;
-  const my_city = req.body.myCity;
-  console.log(my_city);
 
   try {
     await db("data").where("user_data_id", user_id).del();
@@ -259,7 +257,6 @@ app.post("/data", async (req, res) => {
         top_rope: top_rope,
         lead_climb: lead_climb,
         zip_code: zip_code,
-        my_city: my_city,
         user_data_id: user_id,
       })
       .into("data");
@@ -274,20 +271,9 @@ app.get("/select-users", async (req, res) => {
   const climbLevel = req.query.climbLevel;
   const user_id = req.query.user_id;
 
-  const my_city = await db("data")
-    .select("my_city")
+  const zip_code = await db("data")
+    .select("zip_code")
     .where("user_data_id", user_id);
-  
-  const all_cities = await db("data")
-    .select("my_city")
-    .where(climbType, climbLevel)
-    .where("climbing_preference", climbing_preference)
-    .whereNot("user_data_id", user_id);
-
-  const mappedCities = all_cities.map((data) => "|" + data.my_city);
-  const city = my_city[0].my_city;
-  console.log(my_city[0].my_city);
-  console.log(mappedCities);
 
   const image = await db("images")
     .innerJoin("users", "images.image_id", "users.user_id")
@@ -297,14 +283,26 @@ app.get("/select-users", async (req, res) => {
     .where("climbing_preference", climbing_preference)
     .whereNot("user_id", user_id);
 
+  const users_zip_code = await db("data")
+    .select("zip_code")
+    .where(climbType, climbLevel)
+    .where("climbing_preference", climbing_preference)
+    .whereNot("user_data_id", user_id);
+
+  const MappedUsers_zip_code = users_zip_code.map(
+    (data) => "|" + data.zip_code
+  );
+
   try {
     await fetch(
-      `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${city}&destinations=${mappedCities}&key=${process.env.GOOGLE_API_KEY}`
+      `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${zip_code[0].zip_code}&destinations=${MappedUsers_zip_code}&key=${process.env.GOOGLE_API_KEY}`
     )
       .then((res) => res.json())
-      .then((json) =>
-        res.json({ distance: json.rows[0]?.elements, imageFile: image })
-      );
+      .then((json) => {
+        // const distance = json.rows[0]?.elements.map((data, i)=> data.distance.text);
+        // console.log(distance);
+        res.json({ distance: json.rows[0]?.elements, imageFile: image });
+      });
   } catch (error) {
     console.log(error);
   }
@@ -332,7 +330,3 @@ app.get("/visit_user_profile", async (req, res) => {
     console.log(error);
   }
 });
-
-
-
-// "https://maps.googleapis.com/maps/api/geocode/json?address=92103&92109&key=AIzaSyAoxp4gDNYEZdDavCOseCj1MUvZnqUSLzw"
