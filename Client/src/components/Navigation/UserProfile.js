@@ -59,9 +59,9 @@ export const UserProfile = () => {
   return (
     <div>
       <NavBar />
-      <div className="user_profile_container">
-        <div className="user_profile">
-          <div>
+      <div>
+        <div>
+          <div > 
             <img
               className="profile_image"
               type="file"

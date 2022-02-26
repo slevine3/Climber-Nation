@@ -37,7 +37,9 @@ const Login = (props) => {
         console.log(error);
       });
   };
-
+  const handleKey = (event) => {
+    console.log(event.keycode);
+  };
   const authenticateUser = async () => {
     axios
       .get("http://localhost:5000/authentication", {

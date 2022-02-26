@@ -48,44 +48,43 @@ export const SearchUsers = (event) => {
     } else {
       if (climbingPartner && distance) {
         let array = [];
-        return climbingPartner.map((data, i) => {
+        climbingPartner.map((data, i) => {
           const mappedDistance = distance[i];
           const values = Object.assign(mappedDistance, data);
           array.push(values);
           array.sort((a, b) => a.distance.value - b.distance.value);
-          console.log(array);
-
-          // array.map((element) => {
-          //   console.log(element);
-            return (
-              <div className="user_profile_container" key={data.user_id}>
-                <div
-                  className="user_profile"
-                  id={data.user_id}
-                  onClick={handleUserProfile}
-                >
-                  <img
-                    className="profile_image"
-                    type="file"
-                    name="image"
-                    src={
-                      data.filename !== null
-                        ? "http://localhost:5000/images/" + data.filename
-                        : default_profile
-                    }
-                    alt="profile image"
-                  ></img>
-                  <div className="user_info">
-                    <h2>{data.name}</h2>
-                    <h4>Boulder: {data.bouldering}</h4>
-                    <h4>Top Rope: {data.top_rope}</h4>
-                    <h4>Lead Climb: {data.lead_climb}</h4>
-                    {/* <h4>Distance:{element.distance}</h4> */}
-                  </div>
+        
+        });
+       return array.map((element) => {
+          console.log(element);
+          return (
+            <div className="user_profile_container" key={element.user_id}>
+              <div
+                className="user_profile"
+                id={element.user_id}
+                onClick={handleUserProfile}
+              >
+                <img
+                  className="profile_image"
+                  type="file"
+                  name="image"
+                  src={
+                    element.filename !== null
+                      ? "http://localhost:5000/images/" + element.filename
+                      : default_profile
+                  }
+                  alt="profile image"
+                ></img>
+                <div className="user_info">
+                  <h2>{element.name}</h2>
+                  <h4>Boulder: {element.bouldering}</h4>
+                  <h4>Top Rope: {element.top_rope}</h4>
+                  <h4>Lead Climb: {element.lead_climb}</h4>
+                  <h4>Distance:{element.distance.text}</h4>
                 </div>
               </div>
-            );
-          // });
+            </div>
+          );
         });
       }
     }
@@ -175,7 +174,7 @@ export const SearchUsers = (event) => {
             </select>
           </div>
 
-          <div >
+          <div>
             <select
               className="filter_box"
               defaultValue=""

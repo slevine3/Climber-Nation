@@ -6,6 +6,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { ProgressBar } from "react-bootstrap";
 const FormData = require("form-data");
 
 const Profile = () => {
@@ -16,7 +17,7 @@ const Profile = () => {
   const [bouldering, setBouldering] = useState(null);
   const [top_rope, setTopRope] = useState(null);
   const [lead_climb, setLeadClimb] = useState(null);
-  const [zipCode, setZipCode] = useState('');
+  const [zipCode, setZipCode] = useState("");
   const [showProfile, setShowProfile] = useState(false);
   const [storageClimbPreference, setStorageClimbPreference] = useState(null);
   const [storageBouldering, setStorageBouldering] = useState(null);
@@ -81,6 +82,7 @@ const Profile = () => {
         headers: {},
         data: formData,
         onUploadProgress: (ProgressEvent) => {
+          
           console.log(
             "Upload Progress: " +
               Math.round((ProgressEvent.loaded / ProgressEvent.total) * 100) +
@@ -113,7 +115,7 @@ const Profile = () => {
   const handleData = async (event) => {
     event.preventDefault();
 
-    if (zipCode.length !== 5 ) {
+    if (zipCode.length !== 5) {
       setMessage("Please enter a 5-digit valid US zip code");
       return;
     }
