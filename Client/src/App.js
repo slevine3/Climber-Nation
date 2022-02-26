@@ -1,14 +1,12 @@
 import React from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useEffect } from "react";
+import { Route, Routes } from "react-router-dom";
 
 import "./components/Sign-In/Login.css";
 import "./components/Sign-In/Register.css";
 import "./components/Navigation/NavBar.css";
 import "./components/Navigation/Profile.css";
-import "./components/FindClimbers/Search.css";
 import "./components/Navigation/Home.css";
+
 import Home from "./components/Navigation/Home";
 import Login from "./components/Sign-In/Login";
 import { Register } from "./components/Sign-In/Register";

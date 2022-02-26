@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { NavBar } from "../Navigation/NavBar";
-import { useParams } from "react-router-dom";
 import axios from "axios";
 import default_profile from "../Navigation/default_profile.png";
 
