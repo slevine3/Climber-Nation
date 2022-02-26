@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { newUserLogIn } from "../Actions/Actions";
 
 const Login = (props) => {
   const [username, setUsername] = useState(null);
@@ -98,4 +100,14 @@ const Login = (props) => {
   );
 };
 
-export default Login;
+const mapStateToProps = (state) => {
+  return {};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    newUserLogIn: (first_name) => dispatch(newUserLogIn(first_name)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
