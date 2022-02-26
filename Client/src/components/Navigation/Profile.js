@@ -4,7 +4,8 @@ import { connect } from "react-redux";
 import fileSelectHandler from "../Actions/Actions";
 import axios from "axios";
 import React, { useState } from "react";
-
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 const FormData = require("form-data");
 
 const Profile = () => {
@@ -15,9 +16,53 @@ const Profile = () => {
   const [bouldering, setBouldering] = useState(null);
   const [top_rope, setTopRope] = useState(null);
   const [lead_climb, setLeadClimb] = useState(null);
-  const [dataSubmitted, setDataSubmitted] = useState(null);
-  const [zipCode, setZipCode] = useState(null);
- 
+  const [zipCode, setZipCode] = useState('');
+  const [showProfile, setShowProfile] = useState(false);
+  const [storageClimbPreference, setStorageClimbPreference] = useState(null);
+  const [storageBouldering, setStorageBouldering] = useState(null);
+  const [storageTopRope, setStorageTopRope] = useState(null);
+  const [storageLeadClimb, setStorageLeadClimb] = useState(null);
+  const [storageZipCode, setStorageZipCode] = useState(null);
+  const [message, setMessage] = useState(null);
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response.status !== 200) {
+          localStorage.removeItem("token");
+          navigate("/login");
+        }
+      }
+    );
+
+    axios
+      .get("http://localhost:5000/authentication", {
+        headers: { authorization: localStorage.getItem("token") },
+      })
+      .then((error) => {
+        if (error.status === 200) {
+          axios
+            .get("http://localhost:5000/my_profile", {
+              params: { user_id: localStorage.getItem("user_id") },
+            })
+            .then((response) => {
+              {
+                setStorageClimbPreference(
+                  response.data.allUserData[0].climbing_preference
+                );
+                setStorageBouldering(response.data.allUserData[0].bouldering);
+                setStorageTopRope(response.data.allUserData[0].top_rope);
+                setStorageLeadClimb(response.data.allUserData[0].lead_climb);
+                setStorageZipCode(response.data.allUserData[0].zip_code);
+              }
+            });
+        }
+
+        return;
+      });
+  }, []);
 
   const handleOnChange = (event) => {
     setFile(event.target.files[0]);
@@ -54,7 +99,6 @@ const Profile = () => {
   };
 
   const fetchImage = () => {
-    console.log(localStorage.getItem("user_id"));
     axios
       .get("http://localhost:5000/fetch-image", {
         params: { user_id: localStorage.getItem("user_id") },
@@ -68,11 +112,17 @@ const Profile = () => {
 
   const handleData = async (event) => {
     event.preventDefault();
-    setDataSubmitted("Your Changes Have Been Saved!");
+
+    if (zipCode.length !== 5 ) {
+      setMessage("Please enter a 5-digit valid US zip code");
+      return;
+    }
+
+    window.location.reload();
+    setShowProfile(false);
 
     axios
       .post("http://localhost:5000/data", {
-        current_city: current_city,
         climbing_preference: climbing_preference,
         bouldering: bouldering,
         top_rope: top_rope,
@@ -87,11 +137,15 @@ const Profile = () => {
         console.log(error);
       });
   };
+
   return (
     <div>
       <NavBar />
 
-      <div className="profile_container">
+      <div
+        className="profile_container"
+        style={{ display: showProfile ? "block" : "none" }}
+      >
         <div>
           <div>
             <img
@@ -137,7 +191,7 @@ const Profile = () => {
           </div>
         </div>
         <div className="user_level_container">
-        <div>
+          <div>
             <div>
               <h4>Zip Code</h4>
             </div>
@@ -146,6 +200,7 @@ const Profile = () => {
                 onChange={(event) => setZipCode(event.target.value)}
                 className="select"
               ></input>
+              <h4 className="error_message">{message}</h4>
             </div>
           </div>
           <div>
@@ -167,8 +222,6 @@ const Profile = () => {
               </select>
             </div>
           </div>
-
-          
 
           <div className="bouldering">
             <div>
@@ -258,12 +311,51 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <div className="messageAccepted">
-          <h2>{dataSubmitted}</h2>
-        </div>
         <div>
           <button className="button-84" onClick={handleData}>
             Save Changes
+          </button>
+        </div>
+      </div>
+
+      <div className="container_my_profile">
+        <div
+          style={{ display: showProfile ? "none" : "block" }}
+          className="my_profile"
+        >
+          <div>
+            <img
+              className="my_profile_image"
+              type="file"
+              name="image"
+              src={
+                localStorage.getItem("imageFile") ===
+                "http://localhost:5000/images/undefined"
+                  ? default_profile
+                  : localStorage.getItem("imageFile")
+              }
+              alt="profile image"
+            ></img>
+          </div>
+
+          <div className="my_profile_preferences">
+            <h3>Climbing Preference: {storageClimbPreference} </h3>
+          </div>
+          <div>
+            <h3>Bouldering: {storageBouldering} </h3>
+          </div>
+          <div>
+            <h3>Top Rope: {storageTopRope} </h3>
+          </div>
+          <div>
+            <h3>Lead Climb: {storageLeadClimb} </h3>
+          </div>
+          <div>
+            <h3>Zip Code: {storageZipCode} </h3>
+          </div>
+
+          <button className="button-84" onClick={() => setShowProfile(true)}>
+            Make Changes
           </button>
         </div>
       </div>

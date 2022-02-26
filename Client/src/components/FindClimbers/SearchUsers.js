@@ -11,6 +11,7 @@ export const SearchUsers = (event) => {
   const [distance, setDistance] = useState(null);
   const [zip_code, setZipCode] = useState(null);
   const [users_zip_codes, setUserZipCodes] = useState(null);
+  const [finalValues, setFinalValues] = useState(null);
 
   const navigate = useNavigate();
 
@@ -47,44 +48,44 @@ export const SearchUsers = (event) => {
     } else {
       if (climbingPartner && distance) {
         let array = [];
-        // console.log(distance)
-        // console.log(climbingPartner)
-        let newArray = [];
         return climbingPartner.map((data, i) => {
           const mappedDistance = distance[i];
           const values = Object.assign(mappedDistance, data);
           array.push(values);
-          console.log(array[0].distance.value);
- 
+          array.sort((a, b) => a.distance.value - b.distance.value);
+          console.log(array);
 
-          return (
-            <div className="user_profile_container" key={data.user_id}>
-              <div
-                className="user_profile"
-                id={data.user_id}
-                onClick={handleUserProfile}
-              >
-                <img
-                  className="profile_image"
-                  type="file"
-                  name="image"
-                  src={
-                    data.filename !== null
-                      ? "http://localhost:5000/images/" + data.filename
-                      : default_profile
-                  }
-                  alt="profile image"
-                ></img>
-                <div className="user_info">
-                  <h2>{values.name}</h2>
-                  <h4>Boulder: {values.bouldering}</h4>
-                  <h4>Top Rope: {values.top_rope}</h4>
-                  <h4>Lead Climb: {values.lead_climb}</h4>
-                  <h4>Distance:{values.distance.text}</h4>
+          // array.map((element) => {
+          //   console.log(element);
+            return (
+              <div className="user_profile_container" key={data.user_id}>
+                <div
+                  className="user_profile"
+                  id={data.user_id}
+                  onClick={handleUserProfile}
+                >
+                  <img
+                    className="profile_image"
+                    type="file"
+                    name="image"
+                    src={
+                      data.filename !== null
+                        ? "http://localhost:5000/images/" + data.filename
+                        : default_profile
+                    }
+                    alt="profile image"
+                  ></img>
+                  <div className="user_info">
+                    <h2>{data.name}</h2>
+                    <h4>Boulder: {data.bouldering}</h4>
+                    <h4>Top Rope: {data.top_rope}</h4>
+                    <h4>Lead Climb: {data.lead_climb}</h4>
+                    {/* <h4>Distance:{element.distance}</h4> */}
+                  </div>
                 </div>
               </div>
-            </div>
-          );
+            );
+          // });
         });
       }
     }
@@ -95,10 +96,10 @@ export const SearchUsers = (event) => {
       <div className="search-container">
         <div>
           <div>
-            <h2>Filter Search Options: </h2>
+            <h3>Filter Search Options: </h3>
           </div>
           <select
-            className="select"
+            className="filter_box"
             name="climbType"
             defaultValue=""
             onChange={(event) => setClimbPreference(event.target.value)}
@@ -114,12 +115,12 @@ export const SearchUsers = (event) => {
 
         <div>
           <div>
-            <h2>Climb Location: </h2>
+            <h3>Climb Location: </h3>
           </div>
 
           <div>
             <select
-              className="select"
+              className="filter_box"
               name="climbType"
               defaultValue=""
               onChange={(event) => setClimbType(event.target.value)}
@@ -139,12 +140,12 @@ export const SearchUsers = (event) => {
           }}
         >
           <div>
-            <h2>Climbing Level</h2>
+            <h3>Climbing Level</h3>
           </div>
 
-          <div className="center">
+          <div>
             <select
-              className="select"
+              className="filter_box"
               defaultValue=""
               name="climbLevelLower"
               onChange={(event) => setClimbLevel(event.target.value)}
@@ -174,9 +175,9 @@ export const SearchUsers = (event) => {
             </select>
           </div>
 
-          <div className="center">
+          <div >
             <select
-              className="select"
+              className="filter_box"
               defaultValue=""
               name="climbLevelLower"
               onChange={(event) => setClimbLevel(event.target.value)}

@@ -1,5 +1,6 @@
 .search-container {
-  text-align: center;
+  /* text-align: center; */
+  margin-left: 10px;
 }
 
 .all_users_container {
@@ -10,7 +11,6 @@
 
 .user_profile_container {
   display: flex;
-
 }
 
 .user_profile {
@@ -21,7 +21,9 @@
   padding-bottom: 30px;
   align-items: center;
   cursor: pointer;
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px,
+    rgba(0, 0, 0, 0.05) 0px 5px 10px;
+  height: 250px;
 }
 .user_info {
   margin-left: 50px;
@@ -31,4 +33,9 @@
 .center {
   display: flex;
   justify-content: center;
+}
+.filter_box {
+  height: 30px;
+  font-size: 18px;
+  text-align: center;
 }

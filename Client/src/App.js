@@ -16,27 +16,6 @@ import Profile from "./components/Navigation/Profile";
 import { UserProfile } from "./components/Navigation/UserProfile";
 import ErrorPage from "./components/ErrorPage";
 const App = () => {
-  const navigate = useNavigate();
-  useEffect(() => {
-    axios.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        if (error.response.status !== 200) {
-          localStorage.removeItem("token");
-          navigate(1);
-        }
-      }
-    );
-
-    axios
-      .get("http://localhost:5000/authentication", {
-        headers: { authorization: localStorage.getItem("token") },
-      })
-      .then((error) => {
-        if (error.status === 200) return;
-      });
-  }, []);
-
   return (
     <div>
       <Routes>

@@ -94,7 +94,7 @@ export const Register = () => {
             ></input>
             <div className="register_message">{passwordError}</div>
           </div>
-          <div className="register_message">{message}</div>
+          <div style={{ color: '#299617' }}>{message}</div>
           <div>
             <button
               className="register_button"

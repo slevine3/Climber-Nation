@@ -14,11 +14,7 @@ export const NavBar = () => {
             <a href="/home">Home</a>
           </div>
         </div>
-        <div className="nav_link">
-          <div>
-            <a href="/find_climbers">Find Climbers</a>
-          </div>
-        </div>
+
         <div className="nav_link">
           <div>
             <a href="/profile">Profile</a>

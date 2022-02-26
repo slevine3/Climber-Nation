@@ -330,3 +330,14 @@ app.get("/visit_user_profile", async (req, res) => {
     console.log(error);
   }
 });
+
+app.get("/my_profile", async (req, res) => {
+  const user_id = req.query.user_id;
+  const allUserData = await db("images")
+    .innerJoin("users", "images.image_id", "users.user_id")
+    .innerJoin("data", "images.image_id", "data.user_data_id")
+    .select("*")
+    .where("user_id", user_id);
+
+  res.json({ allUserData: allUserData });
+});
