@@ -299,8 +299,6 @@ app.get("/select-users", async (req, res) => {
     )
       .then((res) => res.json())
       .then((json) => {
-        // const distance = json.rows[0]?.elements.map((data, i)=> data.distance.text);
-        // console.log(distance);
         res.json({ distance: json.rows[0]?.elements, imageFile: image });
       });
   } catch (error) {
@@ -338,6 +336,29 @@ app.get("/my_profile", async (req, res) => {
     .innerJoin("data", "images.image_id", "data.user_data_id")
     .select("*")
     .where("user_id", user_id);
+
+  res.json({ allUserData: allUserData });
+});
+
+app.get("/random-users", async (req, res) => {
+  let array = [];
+  let initialUsersId = await db("images")
+    .innerJoin("users", "images.image_id", "users.user_id")
+    .innerJoin("data", "images.image_id", "data.user_data_id")
+    .select("*");
+  initialUsersId.map((data) => array.push(data.user_id));
+
+  const random = Math.floor(Math.random() * array.length);
+
+  const allUserData = await db("images")
+    .innerJoin("users", "images.image_id", "users.user_id")
+    .innerJoin("data", "images.image_id", "data.user_data_id")
+    .select("*")
+    .whereBetween("user_id", [array[random], 1000])
+    .limit(3);
+
+  console.log("random num in array", array[random]);
+  console.log(allUserData);
 
   res.json({ allUserData: allUserData });
 });

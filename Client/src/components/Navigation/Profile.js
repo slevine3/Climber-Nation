@@ -200,7 +200,7 @@ const Profile = () => {
                 onChange={(event) => setZipCode(event.target.value)}
                 className="select"
               ></input>
-              <h4 className="error_message">{message}</h4>
+              <h5 className="error_message">{message}</h5>
             </div>
           </div>
           <div>

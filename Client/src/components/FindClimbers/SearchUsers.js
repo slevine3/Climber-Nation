@@ -3,6 +3,7 @@ import axios from "axios";
 import default_profile from "../Navigation/default_profile.png";
 import { UserProfile } from "../Navigation/UserProfile";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 export const SearchUsers = (event) => {
   const [climbPreference, setClimbPreference] = useState(null);
   const [climbType, setClimbType] = useState(null);
@@ -12,10 +13,25 @@ export const SearchUsers = (event) => {
   const [zip_code, setZipCode] = useState(null);
   const [users_zip_codes, setUserZipCodes] = useState(null);
   const [finalValues, setFinalValues] = useState(null);
+  const [initialUsers, setInitialUsers] = useState(null);
+  const [showPageLoadSearch, setShowPageLoadSearch] = useState(false);
 
   const navigate = useNavigate();
 
+  useEffect(async () => {
+    try {
+      console.log("[useEffect] before axios get");
+      await axios.get("http://localhost:5000/random-users").then((response) => {
+        console.log("[useEffect] response");
+        setInitialUsers(response.data.allUserData);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   const handleSubmit = async () => {
+    setShowPageLoadSearch(true)
     try {
       await axios
         .get("http://localhost:5000/select-users", {
@@ -53,9 +69,8 @@ export const SearchUsers = (event) => {
           const values = Object.assign(mappedDistance, data);
           array.push(values);
           array.sort((a, b) => a.distance.value - b.distance.value);
-        
         });
-       return array.map((element) => {
+        return array.map((element) => {
           console.log(element);
           return (
             <div className="user_profile_container" key={element.user_id}>
@@ -76,7 +91,7 @@ export const SearchUsers = (event) => {
                   alt="profile image"
                 ></img>
                 <div className="user_info">
-                  <h2>{element.name}</h2>
+                  <h2>{element.first_name}</h2>
                   <h4>Boulder: {element.bouldering}</h4>
                   <h4>Top Rope: {element.top_rope}</h4>
                   <h4>Lead Climb: {element.lead_climb}</h4>
@@ -108,7 +123,7 @@ export const SearchUsers = (event) => {
             </option>
             <option>Indoor</option>
             <option>Outdoor</option>
-            <option>Either/Both</option>
+            <option>Both</option>
           </select>
         </div>
 
@@ -214,9 +229,43 @@ export const SearchUsers = (event) => {
       </div>
       <div className="all_users_container"> {renderUsers()} </div>
 
-      <div>
-        <h4></h4>
-      </div>
+      {initialUsers
+        ? initialUsers.map((element) => {
+            return (
+              <div key={element.user_id}
+                style={{ display: showPageLoadSearch ? "none" : "block" }}
+                className="initial_search_container"
+              >
+                <div className="user_profile_container" >
+                  <div
+                    className="user_profile"
+                    id={element.user_id}
+                    onClick={handleUserProfile}
+                  >
+                    <img
+                      className="profile_image"
+                      type="file"
+                      name="image"
+                      src={
+                        element.filename !== null
+                          ? "http://localhost:5000/images/" + element.filename
+                          : default_profile
+                      }
+                      alt="profile image"
+                    ></img>
+                    <div className="user_info">
+                      <h2>{element.first_name}</h2>
+                      <h4>Boulder: {element.bouldering}</h4>
+                      <h4>Top Rope: {element.top_rope}</h4>
+                      <h4>Lead Climb: {element.lead_climb}</h4>
+                      {/* <h4>Distance:{element.distance.text}</h4>  */}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        : null}
     </div>
   );
 };

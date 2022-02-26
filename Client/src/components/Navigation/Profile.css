@@ -29,7 +29,6 @@
   color: green;
 }
 
-
 .button-84 {
   align-items: center;
   background-color: initial;
@@ -98,10 +97,11 @@
 
 .error_message {
   color: rgb(230, 78, 78);
+  margin-top: -20px;
 }
 .user_profile_container {
   display: flex;
-  /* border: 3px solid black; */
+
   flex-direction: column;
 }
 .my_profile_image {
@@ -115,4 +115,9 @@
   -ms-border-radius: 50%;
   -o-border-radius: 50%;
   margin-left: 125px;
+}
+.initial_search_container {
+  display: flex;
+  justify-content: center;
+
 }
