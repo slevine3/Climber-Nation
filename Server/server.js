@@ -341,24 +341,77 @@ app.get("/my_profile", async (req, res) => {
 });
 
 app.get("/random-users", async (req, res) => {
+  const user_id = req.query.user_id;
+  console.log("user_id", user_id);
   let array = [];
-  let initialUsersId = await db("images")
+
+  const zip_code = await db("images")
     .innerJoin("users", "images.image_id", "users.user_id")
     .innerJoin("data", "images.image_id", "data.user_data_id")
-    .select("*");
-  initialUsersId.map((data) => array.push(data.user_id));
+    .select("zip_code")
+    .where("user_id", user_id);
 
-  const random = Math.floor(Math.random() * array.length);
+  console.log("zipcode", zip_code[0]?.zip_code);
 
-  const allUserData = await db("images")
-    .innerJoin("users", "images.image_id", "users.user_id")
-    .innerJoin("data", "images.image_id", "data.user_data_id")
-    .select("*")
-    .whereBetween("user_id", [array[random], 1000])
-    .limit(3);
+  if (!zip_code[0]?.zip_code) {
+    let initialUsersId = await db("images")
+      .innerJoin("users", "images.image_id", "users.user_id")
+      .innerJoin("data", "images.image_id", "data.user_data_id")
+      .select("*");
+    initialUsersId.map((data) => array.push(data.user_id));
 
-  console.log("random num in array", array[random]);
-  console.log(allUserData);
+    const random = Math.floor(Math.random() * array.length);
 
-  res.json({ allUserData: allUserData });
+    const allUserData = await db("images")
+      .innerJoin("users", "images.image_id", "users.user_id")
+      .innerJoin("data", "images.image_id", "data.user_data_id")
+      .select("*")
+      .whereBetween("user_id", [array[random], 100000])
+      .limit(4);
+
+    console.log(allUserData);
+
+    res.json({ allUserData: allUserData });
+  } else {
+    let initialUsersId = await db("images")
+      .innerJoin("users", "images.image_id", "users.user_id")
+      .innerJoin("data", "images.image_id", "data.user_data_id")
+      .select("*");
+    initialUsersId.map((data) => array.push(data.user_id));
+
+    const allUserData = await db("images")
+      .innerJoin("users", "images.image_id", "users.user_id")
+      .innerJoin("data", "images.image_id", "data.user_data_id")
+      .select("*");
+
+    console.log("[else Statement]", allUserData);
+
+    const image = await db("images")
+      .innerJoin("users", "images.image_id", "users.user_id")
+      .innerJoin("data", "images.image_id", "data.user_data_id")
+      .select("*")
+      .whereNot("user_id", user_id)
+      .limit(4);
+
+    const users_zip_code = await db("data")
+      .select("zip_code")
+      .whereNot("user_data_id", user_id)
+      .limit(4);
+
+    const MappedUsers_zip_code = users_zip_code.map(
+      (data) => "|" + data.zip_code
+    );
+
+    try {
+      await fetch(
+        `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${zip_code[0].zip_code}&destinations=${MappedUsers_zip_code}&key=${process.env.GOOGLE_API_KEY}`
+      )
+        .then((res) => res.json())
+        .then((json) => {
+          res.json({ distance: json.rows[0]?.elements, imageFile: image });
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 });

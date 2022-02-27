@@ -9,7 +9,7 @@ const FormData = require("form-data");
 
 const Profile = () => {
   const [file, setFile] = useState(null);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
   const [current_city, setCurrentCity] = useState(null);
   const [climbing_preference, setClimbingPreference] = useState(null);
   const [bouldering, setBouldering] = useState(null);
@@ -80,7 +80,6 @@ const Profile = () => {
         headers: {},
         data: formData,
         onUploadProgress: (ProgressEvent) => {
-          
           console.log(
             "Upload Progress: " +
               Math.round((ProgressEvent.loaded / ProgressEvent.total) * 100) +
@@ -99,12 +98,14 @@ const Profile = () => {
   };
 
   const fetchImage = () => {
+
     axios
       .get("http://localhost:5000/fetch-image", {
         params: { user_id: localStorage.getItem("user_id") },
       })
       .then((response) => {
         localStorage.setItem("imageFile", response.data.imageFile);
+      
         window.location.reload();
       })
       .catch(error);
@@ -175,7 +176,7 @@ const Profile = () => {
                   multiple={false}
                   onChange={handleOnChange}
                 ></input>
-                <div>{error}</div>
+                <div className="error_message">{error}</div>
                 <div>
                   <button
                     className="center"
