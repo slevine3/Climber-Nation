@@ -25,14 +25,14 @@ export const UserProfile = () => {
     );
 
     axios
-      .get("http://localhost:5000/authentication", {
+      .get("https://climber-nation.herokuapp.com/authentication", {
         headers: { authorization: localStorage.getItem("token") },
       })
       .then((error) => {
         if (error.status === 200) {
           try {
             axios
-              .get("http://localhost:5000/visit_user_profile", {
+              .get("https://climber-nation.herokuapp.com/visit_user_profile", {
                 params: {
                   visiting_user_id: localStorage.getItem("visiting_user_id"),
                 },

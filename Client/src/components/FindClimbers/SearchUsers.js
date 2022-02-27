@@ -24,7 +24,7 @@ export const SearchUsers = (event) => {
   useEffect(async () => {
     try {
       await axios
-        .get("http://localhost:5000/random-users", {
+        .get("https://localhost:5000/random-users", {
           params: {
             user_id: localStorage.getItem("user_id"),
           },
@@ -44,7 +44,7 @@ export const SearchUsers = (event) => {
     setShowPageLoadSearch(true);
     try {
       await axios
-        .get("http://localhost:5000/select-users", {
+        .get("https://localhost:5000/select-users", {
           params: {
             climbPreference: climbPreference,
             climbType: climbType,
@@ -95,7 +95,7 @@ export const SearchUsers = (event) => {
                   name="image"
                   src={
                     element.filename !== null
-                      ? "http://localhost:5000/images/" + element.filename
+                      ? "https://localhost:5000/images/" + element.filename
                       : default_profile
                   }
                   alt="profile image"
@@ -137,7 +137,7 @@ export const SearchUsers = (event) => {
                   name="image"
                   src={
                     element.filename !== null
-                      ? "http://localhost:5000/images/" + element.filename
+                      ? "https://localhost:5000/images/" + element.filename
                       : default_profile
                   }
                   alt="profile image"
@@ -180,7 +180,7 @@ export const SearchUsers = (event) => {
                   name="image"
                   src={
                     element.filename !== null
-                      ? "http://localhost:5000/images/" + element.filename
+                      ? "https://localhost:5000/images/" + element.filename
                       : default_profile
                   }
                   alt="profile image"

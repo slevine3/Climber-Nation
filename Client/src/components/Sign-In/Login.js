@@ -15,7 +15,7 @@ const Login = (props) => {
 
   const handleSubmit = async (event) => {
     axios
-      .post("http://localhost:5000/login", {
+      .post("https://climber-nation.herokuapp.com/login", {
         username: username,
         password: password,
       })
@@ -42,7 +42,7 @@ const Login = (props) => {
   };
   const authenticateUser = async () => {
     axios
-      .get("http://localhost:5000/authentication", {
+      .get("https://climber-nation.herokuapp.com/authentication", {
         headers: { authorization: localStorage.getItem("token") },
       })
       .then((response) => {
@@ -55,7 +55,7 @@ const Login = (props) => {
         }
       });
   };
-  props.newUserLogIn(first_name);
+  // props.newUserLogIn(first_name);
   return (
     <div className="login_container">
       <div className="login_input">
@@ -106,7 +106,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    newUserLogIn: (first_name) => dispatch(newUserLogIn(first_name)),
+    // newUserLogIn: (first_name) => dispatch(newUserLogIn(first_name)),
   };
 };
 

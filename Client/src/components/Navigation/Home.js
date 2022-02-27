@@ -20,7 +20,7 @@ const Home = (props) => {
     );
 
     axios
-      .get("http://localhost:5000/authentication", {
+      .get("https://climber-nation.herokuapp.com/authentication", {
         headers: { authorization: localStorage.getItem("token") },
       })
       .then((error) => {

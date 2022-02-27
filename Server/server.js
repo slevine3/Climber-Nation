@@ -12,19 +12,20 @@ const jwt = require("jsonwebtoken");
 env.config();
 app.use(express.urlencoded());
 app.use(express.json());
-app.use(
-  cors({
-    header: "Content-Type: application/json",
-    credentials: true,
-    origin: ["http://localhost:3000"],
-    methods: ["GET", "POST"],
-  })
-);
+app.use(cors());
+
+const port = process.env.PORT || 5000;
+
+app.use(express.static(path.join(__dirname, "build")));
+
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 app.use("/images", express.static(__dirname + "/Images"));
 
-app.listen(process.env.port, () => {
-  console.log(`Listening on ${process.env.port}`);
+app.listen(port, () => {
+  console.log(`Listening on ${port}`);
 });
 
 const db = knex({
@@ -36,8 +37,7 @@ const db = knex({
     password: process.env.PASSWORDDB,
     database: process.env.DATABASEDB,
 
-    //Need to lookup what this is for
-    // ssl: { rejectUnauthorized: false },
+    ssl: { rejectUnauthorized: false },
   },
 });
 app.set("db", db);
@@ -115,7 +115,8 @@ app.get("/authentication", authenticateToken, async (req, res) => {
     .select("filename")
     .where("username", username);
 
-  const imageFile = "http://localhost:5000/images/" + image[0]?.filename;
+  const imageFile =
+    "https://climber-nation.herokuapp.com/images/" + image[0]?.filename;
 
   res.json({ allUserInfo: allUserInfo[0], imageFile: imageFile });
 });
@@ -127,7 +128,8 @@ app.get("/fetch-image", async (req, res) => {
     .select("filename")
     .where("user_id", user_id);
 
-  const imageFile = "http://localhost:5000/images/" + image[0]?.filename;
+  const imageFile =
+    "https://climber-nation.herokuapp.com/images/" + image[0]?.filename;
 
   res.json({ imageFile: imageFile });
 });
@@ -321,7 +323,8 @@ app.get("/visit_user_profile", async (req, res) => {
       .select("filename")
       .where("user_id", visiting_user_id);
 
-    const imageFile = "http://localhost:5000/images/" + image[0]?.filename;
+    const imageFile =
+      "https://climber-nation.herokuapp.com/images/" + image[0]?.filename;
 
     res.send({ visiting_user_data: allUserData, imageFile: imageFile });
   } catch (error) {

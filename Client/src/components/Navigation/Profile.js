@@ -37,13 +37,13 @@ const Profile = () => {
     );
 
     axios
-      .get("http://localhost:5000/authentication", {
+      .get("https://climber-nation.herokuapp.com/authentication", {
         headers: { authorization: localStorage.getItem("token") },
       })
       .then((error) => {
         if (error.status === 200) {
           axios
-            .get("http://localhost:5000/my_profile", {
+            .get("https://climber-nation.herokuapp.com/my_profile", {
               params: { user_id: localStorage.getItem("user_id") },
             })
             .then((response) => {
@@ -75,7 +75,7 @@ const Profile = () => {
     formData.append("user_id", localStorage.getItem("user_id"));
     try {
       axios({
-        url: "http://localhost:5000/upload",
+        url: "https://climber-nation.herokuapp.com/upload",
         method: "POST",
         headers: {},
         data: formData,
@@ -100,7 +100,7 @@ const Profile = () => {
   const fetchImage = () => {
 
     axios
-      .get("http://localhost:5000/fetch-image", {
+      .get("https://climber-nation.herokuapp.com/fetch-image", {
         params: { user_id: localStorage.getItem("user_id") },
       })
       .then((response) => {
@@ -123,7 +123,7 @@ const Profile = () => {
     setShowProfile(false);
 
     axios
-      .post("http://localhost:5000/data", {
+      .post("https://climber-nation.herokuapp.com/data", {
         climbing_preference: climbing_preference,
         bouldering: bouldering,
         top_rope: top_rope,
@@ -155,7 +155,7 @@ const Profile = () => {
               name="image"
               src={
                 localStorage.getItem("imageFile") ===
-                "http://localhost:5000/images/undefined"
+                "https://climber-nation.herokuapp.com/images/undefined"
                   ? default_profile
                   : localStorage.getItem("imageFile")
               }
@@ -331,7 +331,7 @@ const Profile = () => {
               name="image"
               src={
                 localStorage.getItem("imageFile") ===
-                "http://localhost:5000/images/undefined"
+                "https://climber-nation.herokuapp.com/images/undefined"
                   ? default_profile
                   : localStorage.getItem("imageFile")
               }

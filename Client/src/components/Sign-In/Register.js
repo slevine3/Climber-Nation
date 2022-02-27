@@ -13,7 +13,7 @@ export const Register = () => {
     event.preventDefault();
 
     axios
-      .post("http://localhost:5000/register", {
+      .post("https://climber-nation.herokuapp.com/register", {
         first_name: first_name,
         username: username,
         password: password,
