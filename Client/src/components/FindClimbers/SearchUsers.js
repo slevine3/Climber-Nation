@@ -118,44 +118,41 @@ export const SearchUsers = (event) => {
   const pageLoadSearch = () => {
     if (initialUsers) {
       console.log("[initialUsers]", initialUsers);
-      return(
-        initialUsers.map((element) => {
-          return (
-            <div
-              key={element.user_id}
-              style={{ display: showPageLoadSearch ? "none" : "block" }}
-              className="initial_search_container"
-            >
-              <div className="user_profile_container">
-                <div
-                  className="user_profile"
-                  id={element.user_id}
-                  onClick={handleUserProfile}
-                >
-                  <img
-                    className="profile_image"
-                    type="file"
-                    name="image"
-                    src={
-                      element.filename !== null
-                        ? "http://localhost:5000/images/" + element.filename
-                        : default_profile
-                    }
-                    alt="profile image"
-                  ></img>
-                  <div className="user_info">
-                    <h2>{element.first_name}</h2>
-                    <h4>Boulder: {element.bouldering}</h4>
-                    <h4>Top Rope: {element.top_rope}</h4>
-                    <h4>Lead Climb: {element.lead_climb}</h4>
-                  </div>
+      return initialUsers.map((element) => {
+        return (
+          <div
+            key={element.user_id}
+            style={{ display: showPageLoadSearch ? "none" : "block" }}
+            className="all_users_container"
+          >
+            <div className="user_profile_container">
+              <div
+                className="user_profile"
+                id={element.user_id}
+                onClick={handleUserProfile}
+              >
+                <img
+                  className="profile_image"
+                  type="file"
+                  name="image"
+                  src={
+                    element.filename !== null
+                      ? "http://localhost:5000/images/" + element.filename
+                      : default_profile
+                  }
+                  alt="profile image"
+                ></img>
+                <div className="user_info">
+                  <h2>{element.first_name}</h2>
+                  <h4>Boulder: {element.bouldering}</h4>
+                  <h4>Top Rope: {element.top_rope}</h4>
+                  <h4>Lead Climb: {element.lead_climb}</h4>
                 </div>
               </div>
             </div>
-          );
-        })
-      )
-     
+          </div>
+        );
+      });
     } else {
       if (climbingPartnerFromReload && distanceFromReload) {
         let array = [];
@@ -166,7 +163,6 @@ export const SearchUsers = (event) => {
           array.sort((a, b) => a.distance.value - b.distance.value);
         });
         return array.map((element) => {
-          console.log(element);
           return (
             <div
               style={{ display: showPageLoadSearch ? "none" : "block" }}
@@ -328,8 +324,7 @@ export const SearchUsers = (event) => {
       </div>
       <div className="all_users_container"> {renderUsers()} </div>
 
-      {pageLoadSearch()}
-      
+      <div className="all_users_container"> {pageLoadSearch()}</div>
     </div>
   );
 };
