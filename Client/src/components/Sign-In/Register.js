@@ -90,7 +90,7 @@ export const Register = () => {
             <input
               onChange={(event) => setPassword(event.target.value)}
               name="password"
-              type="text"
+              type="password"
             ></input>
             <div className="register_message">{passwordError}</div>
           </div>

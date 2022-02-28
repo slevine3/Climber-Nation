@@ -81,7 +81,7 @@ const Login = (props) => {
           <input
             onChange={(event) => setPassword(event.target.value)}
             name="password"
-            type="text"
+            type="password"
           ></input>
         </div>
         <div className="login_message">{passwordError}</div>
