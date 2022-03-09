@@ -7,7 +7,7 @@ import { newUserLogIn } from "../Actions/Actions";
 const Login = (props) => {
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
-  const [first_name, setFirstName] = useState("");
+  // const [first_name, setFirstName] = useState("");
   const [usernameError, setUsernameError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
 
@@ -37,19 +37,21 @@ const Login = (props) => {
         console.log(error);
       });
   };
-  const handleKey = (event) => {
-    console.log(event.keycode);
-  };
+
   const authenticateUser = async () => {
     axios
       .get("https://climber-nation.herokuapp.com/authentication", {
-        headers: { authorization: localStorage.getItem("token") },
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+          authorization: localStorage.getItem("token"),
+        },
       })
       .then((response) => {
         if (response.status === 200) {
-          localStorage.setItem("name", response.data.allUserInfo.first_name);
-          localStorage.setItem("imageFile", response.data.imageFile);
-          localStorage.setItem("user_id", response.data.allUserInfo.user_id);
+          localStorage.setItem("name", response.data.allUserInfo?.first_name);
+          localStorage.setItem("imageFile", response.data?.imageFile);
+          localStorage.setItem("user_id", response.data.allUserInfo?.user_id);
 
           navigate("/home");
         }
@@ -81,7 +83,7 @@ const Login = (props) => {
           <input
             onChange={(event) => setPassword(event.target.value)}
             name="password"
-            type="text"
+            type="password"
           ></input>
         </div>
         <div className="login_message">{passwordError}</div>
@@ -100,14 +102,10 @@ const Login = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {};
-};
-
 const mapDispatchToProps = (dispatch) => {
   return {
     // newUserLogIn: (first_name) => dispatch(newUserLogIn(first_name)),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(null, mapDispatchToProps)(Login);

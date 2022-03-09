@@ -12,15 +12,23 @@ const jwt = require("jsonwebtoken");
 env.config();
 app.use(express.urlencoded());
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    },
+    credentials: true,
+    origin: ["https://climber-nation.herokuapp.com/"],
+    methods: ["GET", "POST"],
+  })
+);
 
 const port = process.env.PORT || 5000;
 
 app.use(express.static(path.join(__dirname, "build")));
 
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
-});
+
 
 app.use("/images", express.static(__dirname + "/Images"));
 
@@ -106,9 +114,7 @@ const authenticateToken = (req, res, next) => {
 app.get("/authentication", authenticateToken, async (req, res) => {
   const username = req.user.username;
 
-  const allUserInfo = await db("users")
-    .select("user_id", "first_name")
-    .where("username", username);
+  const allUserInfo = await db("users").select("*").where("username", username);
 
   const image = await db("images")
     .innerJoin("users", "images.image_id", "users.user_id")
@@ -118,7 +124,10 @@ app.get("/authentication", authenticateToken, async (req, res) => {
   const imageFile =
     "https://climber-nation.herokuapp.com/images/" + image[0]?.filename;
 
-  res.json({ allUserInfo: allUserInfo[0], imageFile: imageFile });
+  res.json({
+    allUserInfo: allUserInfo[0],
+    imageFile: imageFile,
+  });
 });
 
 app.get("/fetch-image", async (req, res) => {
@@ -165,7 +174,6 @@ app.post("/login", async (req, res) => {
       res.json({
         auth: true,
         accessToken: accessToken,
-
         username: username,
       });
 
@@ -345,7 +353,6 @@ app.get("/my_profile", async (req, res) => {
 
 app.get("/random-users", async (req, res) => {
   const user_id = req.query.user_id;
-  console.log("user_id", user_id);
   let array = [];
 
   const zip_code = await db("images")
@@ -354,7 +361,6 @@ app.get("/random-users", async (req, res) => {
     .select("zip_code")
     .where("user_id", user_id);
 
-  console.log("zipcode", zip_code[0]?.zip_code);
 
   if (!zip_code[0]?.zip_code) {
     let initialUsersId = await db("images")
@@ -372,8 +378,6 @@ app.get("/random-users", async (req, res) => {
       .whereBetween("user_id", [array[random], 100000])
       .limit(4);
 
-    console.log(allUserData);
-
     res.json({ allUserData: allUserData });
   } else {
     let initialUsersId = await db("images")
@@ -387,7 +391,6 @@ app.get("/random-users", async (req, res) => {
       .innerJoin("data", "images.image_id", "data.user_data_id")
       .select("*");
 
-    console.log("[else Statement]", allUserData);
 
     const image = await db("images")
       .innerJoin("users", "images.image_id", "users.user_id")
@@ -417,4 +420,7 @@ app.get("/random-users", async (req, res) => {
       console.log(error);
     }
   }
+});
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
 });

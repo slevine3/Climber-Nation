@@ -1,12 +1,11 @@
 import { NavBar } from "./NavBar";
-import { connect } from "react-redux";
 import { SearchUsers } from "../FindClimbers/SearchUsers";
 
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
 
-const Home = (props) => {
+const Home = () => {
   const navigate = useNavigate();
   useEffect(() => {
     axios.interceptors.response.use(

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+// import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
   const [first_name, setFirstName] = useState(null);
@@ -9,6 +10,9 @@ export const Register = () => {
   const [usernameError, setUsernameError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
   const [message, setMessage] = useState(null);
+
+  // const navigate = useNavigate();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -44,6 +48,8 @@ export const Register = () => {
           setUsernameError(null);
           setPasswordError(null);
           setMessage(response.data);
+
+          // navigate('/home')
         }
       })
       .catch(function (error) {
@@ -90,7 +96,7 @@ export const Register = () => {
             <input
               onChange={(event) => setPassword(event.target.value)}
               name="password"
-              type="text"
+              type="password"
             ></input>
             <div className="register_message">{passwordError}</div>
           </div>

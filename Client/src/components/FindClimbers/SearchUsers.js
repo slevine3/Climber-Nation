@@ -1,9 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
 import default_profile from "../Navigation/default_profile.png";
-import { UserProfile } from "../Navigation/UserProfile";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+
 export const SearchUsers = (event) => {
   const [climbPreference, setClimbPreference] = useState(null);
   const [climbType, setClimbType] = useState(null);
@@ -24,7 +24,7 @@ export const SearchUsers = (event) => {
   useEffect(async () => {
     try {
       await axios
-        .get("https://localhost:5000/random-users", {
+        .get("https://climber-nation.herokuapp.com/random-users", {
           params: {
             user_id: localStorage.getItem("user_id"),
           },
@@ -44,7 +44,7 @@ export const SearchUsers = (event) => {
     setShowPageLoadSearch(true);
     try {
       await axios
-        .get("https://localhost:5000/select-users", {
+        .get("https://climber-nation.herokuapp.com/select-users", {
           params: {
             climbPreference: climbPreference,
             climbType: climbType,
@@ -75,13 +75,23 @@ export const SearchUsers = (event) => {
       if (climbingPartner && distance) {
         let array = [];
         climbingPartner.map((data, i) => {
-          const mappedDistance = distance[i];
-          const values = Object.assign(mappedDistance, data);
-          array.push(values);
-          array.sort((a, b) => a.distance.value - b.distance.value);
+          let mappedDistance = distance[i];
+
+          if (mappedDistance === undefined) {
+            climbingPartner.splice(i, 1);
+            climbingPartner.map((data, i) => {
+              mappedDistance = distance[i];
+              const values = Object.assign(mappedDistance, data);
+              array.push(values);
+              array.sort((a, b) => a.distance.value - b.distance.value);
+            });
+          } else {
+            const values = Object.assign(mappedDistance, data);
+            array.push(values);
+            array.sort((a, b) => a.distance.value - b.distance.value);
+          }
         });
         return array.map((element) => {
-          console.log(element);
           return (
             <div className="user_profile_container" key={element.user_id}>
               <div
@@ -95,7 +105,8 @@ export const SearchUsers = (event) => {
                   name="image"
                   src={
                     element.filename !== null
-                      ? "https://localhost:5000/images/" + element.filename
+                      ? "https://climber-nation.herokuapp.com/images/" +
+                        element.filename
                       : default_profile
                   }
                   alt="profile image"
@@ -117,7 +128,6 @@ export const SearchUsers = (event) => {
 
   const pageLoadSearch = () => {
     if (initialUsers) {
-      console.log("[initialUsers]", initialUsers);
       return initialUsers.map((element) => {
         return (
           <div
@@ -137,7 +147,8 @@ export const SearchUsers = (event) => {
                   name="image"
                   src={
                     element.filename !== null
-                      ? "https://localhost:5000/images/" + element.filename
+                      ? "https://climber-nation.herokuapp.com/images/" +
+                        element.filename
                       : default_profile
                   }
                   alt="profile image"
@@ -180,7 +191,8 @@ export const SearchUsers = (event) => {
                   name="image"
                   src={
                     element.filename !== null
-                      ? "https://localhost:5000/images/" + element.filename
+                      ? "https://climber-nation.herokuapp.com/images/" +
+                        element.filename
                       : default_profile
                   }
                   alt="profile image"
