@@ -59,9 +59,10 @@ export const UserProfile = () => {
   return (
     <div>
       <NavBar />
-      <div>
-        <div>
-          <div > 
+
+      {/* <div className="all_users_container">
+        <div className="user_profile_container">
+          <div className="user_profile"> */}
             <img
               className="profile_image"
               type="file"
@@ -69,25 +70,29 @@ export const UserProfile = () => {
               src={image ? image : default_profile}
               alt="profile image"
             ></img>
+            
+              <div>
+                <h1>{first_name}</h1>
+              </div>
+              <div>
+                <h1>{city}</h1>
+              </div>
+              <div>
+                <h1>Climbing Preference: {climbing_preference}</h1>
+              </div>
+              <div>
+                <h1>Bouldering: {bouldering}</h1>
+              </div>
+              <div>
+                <h1>Top Rope: {top_rope}</h1>
+              </div>
+              <div>
+                <h1>Lead Climb:{lead_climb}</h1>
+              </div>
+{/*           
           </div>
-          <h1>{first_name}</h1>
         </div>
-        <div>
-          <h1>{city}</h1>
-        </div>
-        <div>
-          <h1>Climbing Preference: {climbing_preference}</h1>
-        </div>
-        <div>
-          <h1>Bouldering: {bouldering}</h1>
-        </div>
-        <div>
-          <h1>Top Rope: {top_rope}</h1>
-        </div>
-        <div>
-          <h1>Lead Climb:{lead_climb}</h1>
-        </div>
-      </div>
+      </div> */}
     </div>
   );
 };
