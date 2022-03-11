@@ -4,13 +4,13 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ProgressBar } from "react-bootstrap";
+
 const FormData = require("form-data");
 
 const Profile = () => {
   const [file, setFile] = useState(null);
   const [error, setError] = useState(false);
-  const [current_city, setCurrentCity] = useState(null);
+
   const [climbing_preference, setClimbingPreference] = useState(null);
   const [bouldering, setBouldering] = useState(null);
   const [top_rope, setTopRope] = useState(null);
@@ -47,15 +47,13 @@ const Profile = () => {
               params: { user_id: localStorage.getItem("user_id") },
             })
             .then((response) => {
-              {
-                setStorageClimbPreference(
-                  response.data.allUserData[0].climbing_preference
-                );
-                setStorageBouldering(response.data.allUserData[0].bouldering);
-                setStorageTopRope(response.data.allUserData[0].top_rope);
-                setStorageLeadClimb(response.data.allUserData[0].lead_climb);
-                setStorageZipCode(response.data.allUserData[0].zip_code);
-              }
+              setStorageClimbPreference(
+                response.data.allUserData[0].climbing_preference
+              );
+              setStorageBouldering(response.data.allUserData[0].bouldering);
+              setStorageTopRope(response.data.allUserData[0].top_rope);
+              setStorageLeadClimb(response.data.allUserData[0].lead_climb);
+              setStorageZipCode(response.data.allUserData[0].zip_code);
             });
         }
 
@@ -98,14 +96,13 @@ const Profile = () => {
   };
 
   const fetchImage = () => {
-
     axios
       .get("https://climber-nation.herokuapp.com/fetch-image", {
         params: { user_id: localStorage.getItem("user_id") },
       })
       .then((response) => {
         localStorage.setItem("imageFile", response.data.imageFile);
-      
+
         window.location.reload();
       })
       .catch(error);
@@ -115,10 +112,17 @@ const Profile = () => {
     event.preventDefault();
 
     if (zipCode.length !== 5) {
-      setMessage("Please enter a 5-digit valid US zip code");
+      setMessage("Please enter a 5-digit valid US zip code.");
+      return;
+    } else if (zipCode > 96700 && zipCode < 96899) {
+      console.log("else if");
+      setMessage("Sorry, Hawaii zip codes are not currently a valid feature.");
+      return;
+    } else if (isNaN(zipCode) === true) {
+   
+      setMessage("Please enter a 5-digit valid US zip code.");
       return;
     }
-
     window.location.reload();
     setShowProfile(false);
 

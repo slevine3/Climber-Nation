@@ -19,7 +19,6 @@ app.use(
       "Access-Control-Allow-Origin": "*",
     },
     credentials: true,
-    origin: ["https://climber-nation.herokuapp.com/"],
     methods: ["GET", "POST"],
   })
 );
@@ -27,8 +26,6 @@ app.use(
 const port = process.env.PORT || 5000;
 
 app.use(express.static(path.join(__dirname, "build")));
-
-
 
 app.use("/images", express.static(__dirname + "/Images"));
 
@@ -110,7 +107,6 @@ const authenticateToken = (req, res, next) => {
 };
 
 //AUTHENTICATION
-
 app.get("/authentication", authenticateToken, async (req, res) => {
   const username = req.user.username;
 
@@ -170,7 +166,6 @@ app.post("/login", async (req, res) => {
     ) {
       //ACCESS TOKEN
       const accessToken = generateAccessToken(userExists[0]);
-
       res.json({
         auth: true,
         accessToken: accessToken,
@@ -186,7 +181,6 @@ app.post("/login", async (req, res) => {
 });
 
 //GENERATE TOKEN
-
 const generateAccessToken = (user) => {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "300m",
@@ -361,7 +355,6 @@ app.get("/random-users", async (req, res) => {
     .select("zip_code")
     .where("user_id", user_id);
 
-
   if (!zip_code[0]?.zip_code) {
     let initialUsersId = await db("images")
       .innerJoin("users", "images.image_id", "users.user_id")
@@ -376,7 +369,7 @@ app.get("/random-users", async (req, res) => {
       .innerJoin("data", "images.image_id", "data.user_data_id")
       .select("*")
       .whereBetween("user_id", [array[random], 100000])
-      .limit(4);
+      .limit(9);
 
     res.json({ allUserData: allUserData });
   } else {
@@ -391,18 +384,17 @@ app.get("/random-users", async (req, res) => {
       .innerJoin("data", "images.image_id", "data.user_data_id")
       .select("*");
 
-
     const image = await db("images")
       .innerJoin("users", "images.image_id", "users.user_id")
       .innerJoin("data", "images.image_id", "data.user_data_id")
       .select("*")
       .whereNot("user_id", user_id)
-      .limit(4);
+      .limit(9);
 
     const users_zip_code = await db("data")
       .select("zip_code")
       .whereNot("user_data_id", user_id)
-      .limit(4);
+      .limit(9);
 
     const MappedUsers_zip_code = users_zip_code.map(
       (data) => "|" + data.zip_code

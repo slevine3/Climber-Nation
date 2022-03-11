@@ -10,15 +10,15 @@ export const SearchUsers = (event) => {
   const [climbLevel, setClimbLevel] = useState(null);
   const [climbingPartner, setClimbingPartner] = useState(null);
   const [distance, setDistance] = useState(null);
-  const [zip_code, setZipCode] = useState(null);
-  const [users_zip_codes, setUserZipCodes] = useState(null);
-  const [finalValues, setFinalValues] = useState(null);
   const [initialUsers, setInitialUsers] = useState(null);
-  const [initialUsersWithZipCode, setInitialUsersWithZipCode] = useState(null);
+
   const [showPageLoadSearch, setShowPageLoadSearch] = useState(false);
   const [climbingPartnerFromReload, setClimbingPartnerFromReload] =
     useState(null);
   const [distanceFromReload, setDistanceFromReload] = useState(null);
+  const [climbPreferenceMessage, setClimbPreferenceMessage] = useState(null);
+  const [climbTypeMessage, setClimbTypeMessage] = useState(null);
+  const [climbLevelMessage, setClimbLevelMessage] = useState(null);
   const navigate = useNavigate();
 
   useEffect(async () => {
@@ -31,7 +31,6 @@ export const SearchUsers = (event) => {
         })
         .then((response) => {
           setInitialUsers(response.data.allUserData);
-          setInitialUsersWithZipCode(response.data.allUserData);
           setClimbingPartnerFromReload(response.data.imageFile);
           setDistanceFromReload(response.data.distance);
         });
@@ -41,23 +40,40 @@ export const SearchUsers = (event) => {
   }, []);
 
   const handleSubmit = async () => {
-    setShowPageLoadSearch(true);
-    try {
-      await axios
-        .get("https://climber-nation.herokuapp.com/select-users", {
-          params: {
-            climbPreference: climbPreference,
-            climbType: climbType,
-            climbLevel: climbLevel,
-            user_id: localStorage.getItem("user_id"),
-          },
-        })
-        .then((response) => {
-          setClimbingPartner(response.data.imageFile);
-          setDistance(response.data.distance);
-        });
-    } catch (error) {
-      console.log(error);
+    if (climbPreference === null) {
+      setClimbPreferenceMessage("Please enter a climbing preference");
+      setClimbTypeMessage(null);
+      setClimbLevelMessage(null);
+    } else if (climbType === null) {
+      setClimbPreferenceMessage(null);
+      setClimbTypeMessage("Please enter a climbing location");
+      setClimbLevelMessage(null);
+    } else if (climbLevel === null) {
+      setClimbPreferenceMessage(null);
+      setClimbTypeMessage(null);
+      setClimbLevelMessage("Please enter a climbing level");
+    } else {
+      setClimbPreferenceMessage(null);
+      setClimbTypeMessage(null);
+      setClimbLevelMessage(null);
+      setShowPageLoadSearch(true);
+      try {
+        await axios
+          .get("https://climber-nation.herokuapp.com/select-users", {
+            params: {
+              climbPreference: climbPreference,
+              climbType: climbType,
+              climbLevel: climbLevel,
+              user_id: localStorage.getItem("user_id"),
+            },
+          })
+          .then((response) => {
+            setClimbingPartner(response.data.imageFile);
+            setDistance(response.data.distance);
+          });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -233,7 +249,9 @@ export const SearchUsers = (event) => {
             <option>Both</option>
           </select>
         </div>
-
+        <div style={{ color: "red", fontWeight: "bold" }}>
+          {climbPreferenceMessage}
+        </div>
         <div>
           <div>
             <h3>Climb Location: </h3>
@@ -254,6 +272,9 @@ export const SearchUsers = (event) => {
               <option>lead_climb</option>
             </select>
           </div>
+        </div>
+        <div style={{ color: "red", fontWeight: "bold" }}>
+          {climbTypeMessage}
         </div>
         <div
           style={{
@@ -327,6 +348,9 @@ export const SearchUsers = (event) => {
               <option>5.12d</option>
               <option>5.13+</option>
             </select>
+          </div>
+          <div style={{ color: "red", fontWeight: "bold" }}>
+            {climbLevelMessage}
           </div>
           <br></br>
           <button className="button-84" onClick={handleSubmit}>

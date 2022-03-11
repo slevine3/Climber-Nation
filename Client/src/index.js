@@ -5,12 +5,10 @@ import App from "./App";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
-import { rootReducers } from "./components/Reducers.js/Reducers";
 import logger from "redux-logger";
 import thunk from "redux-thunk";
 import { BrowserRouter } from "react-router-dom";
-import { Register } from "./components/Sign-In/Register";
-import { Route } from "react-router-dom";
+
 
 const store = createStore(applyMiddleware(logger, thunk));
 

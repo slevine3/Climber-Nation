@@ -13,8 +13,18 @@ export const Register = () => {
 
   // const navigate = useNavigate();
 
+  onkeyup = (event) => {
+    handleKeyPress(event);
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.keyCode === 13) {
+      handleSubmit();
+    }
+  };
+
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    event?.preventDefault();
 
     axios
       .post("https://climber-nation.herokuapp.com/register", {
@@ -100,7 +110,7 @@ export const Register = () => {
             ></input>
             <div className="register_message">{passwordError}</div>
           </div>
-          <div style={{ color: '#299617' }}>{message}</div>
+          <div style={{ color: "#299617" }}>{message}</div>
           <div>
             <button
               className="register_button"
