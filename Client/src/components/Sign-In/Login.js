@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { useEffect } from "react";
 
 const Login = (props) => {
   const [username, setUsername] = useState(null);
@@ -24,7 +24,7 @@ const Login = (props) => {
 
   const handleSubmit = async (event) => {
     axios
-      .post("https://climber-nation.herokuapp.com/login", {
+      .post(process.env.REACT_APP_LOGIN_ADDRESS, {
         username: username,
         password: password,
       })
@@ -49,7 +49,7 @@ const Login = (props) => {
 
   const authenticateUser = async () => {
     axios
-      .get("https://climber-nation.herokuapp.com/authentication", {
+      .get(process.env.REACT_APP_AUTHENTICATION_ADDRESS, {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json",
@@ -66,7 +66,18 @@ const Login = (props) => {
         }
       });
   };
- 
+
+  const handleDemoUser = () => {
+    setUsername("Demo");
+    setPassword("135790");
+  };
+
+  useEffect(() => {
+    if ((username === "Demo") & (password === "135790")) {
+      handleSubmit();
+    }
+  });
+
   return (
     <div className="login_container">
       <div className="login_input">
@@ -102,6 +113,11 @@ const Login = (props) => {
           </button>
         </div>
         <div>
+          <button className="input_button" onClick={handleDemoUser}>
+            Demo User Login
+          </button>
+        </div>
+        <div>
           <a className="login_href" href="/register">
             Register Here!
           </a>
@@ -110,7 +126,5 @@ const Login = (props) => {
     </div>
   );
 };
-
-
 
 export default Login;

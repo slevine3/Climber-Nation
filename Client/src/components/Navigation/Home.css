@@ -24,7 +24,21 @@
   box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px,
     rgba(0, 0, 0, 0.05) 0px 5px 10px;
   height: 250px;
+  background-color: rgb(218, 219, 219);
 }
+
+.user_profile:hover {
+  /*background: linear-gradient(to left, salmon 50%, lightblue 50%) right;
+  */
+  background-color: white;
+  background-size: 100%;
+  transition: 0.5s ease-out;
+  -webkit-transition: 0.5s ease-out;
+  -moz-transition: 0.5s ease-out;
+  -ms-transition: 0.5s ease-out;
+  -o-transition: 0.5s ease-out;
+}
+
 .user_info {
   margin-left: 50px;
   pointer-events: none;

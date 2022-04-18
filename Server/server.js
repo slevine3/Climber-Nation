@@ -8,18 +8,20 @@ const path = require("path");
 const multer = require("multer");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const AWS = require("aws-sdk");
+const fs = require("fs");
 
 env.config();
 app.use(express.urlencoded());
 app.use(express.json());
 app.use(
   cors({
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-    },
-    credentials: true,
-    methods: ["GET", "POST"],
+    // headers: {
+    //   "Content-Type": "application/json",
+    //   "Access-Control-Allow-Origin": "*",
+    // },
+    // credentials: true,
+    // methods: ["GET", "POST"],
   })
 );
 
@@ -117,8 +119,7 @@ app.get("/authentication", authenticateToken, async (req, res) => {
     .select("filename")
     .where("username", username);
 
-  const imageFile =
-    "https://climber-nation.herokuapp.com/images/" + image[0]?.filename;
+  const imageFile = image[0]?.filename;
 
   res.json({
     allUserInfo: allUserInfo[0],
@@ -133,8 +134,7 @@ app.get("/fetch-image", async (req, res) => {
     .select("filename")
     .where("user_id", user_id);
 
-  const imageFile =
-    "https://climber-nation.herokuapp.com/images/" + image[0]?.filename;
+  const imageFile = image[0]?.filename;
 
   res.json({ imageFile: imageFile });
 });
@@ -226,6 +226,8 @@ app.post("/upload", (req, res) => {
             "Sorry only png, jpg, and jpeg files allowed. Please try uploading something else!",
         });
       } else {
+        const oldImageFile = await db("images").where("image_id", user_id);
+
         await db("images").where("image_id", user_id).del();
         await db("images")
           .where("image_id", user_id)
@@ -234,12 +236,62 @@ app.post("/upload", (req, res) => {
             image_id: user_id,
           })
           .into("images");
+
+        deleteObject(oldImageFile);
+        uploadFile({ path: req.file.path, user_id: user_id });
       }
     } catch (error) {
       console.log(error);
     }
   });
 });
+
+//AWS S3 LOGIN
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.ID,
+  secretAccessKey: process.env.SECRET,
+  Bucket: process.env.BUCKET_NAME,
+});
+
+//S3 FILE SYSTEM
+
+const uploadFile = (fileName) => {
+  console.log(fileName);
+
+  // Read content from the file
+  const fileContent = fs.readFileSync(fileName.path);
+  console.log(fileContent);
+  // Setting up S3 upload parameters
+  const params = {
+    Bucket: process.env.BUCKET_NAME,
+    Key: `${fileName.user_id}_${fileName.path.substring(7)}`, // File name you want to save as in S3
+    Body: fileContent,
+    ContentType: "image/jpeg",
+  };
+
+  // Uploading files to the bucket
+  s3.upload(params, function (err, data) {
+    if (err) {
+      throw err;
+    }
+  });
+};
+
+// DELETE FILES FROM S3 BUCKET
+const deleteObject = (oldImageFile) => {
+  const deleteOldFile =
+    oldImageFile[0].image_id + "_" + oldImageFile[0].filename;
+  s3.deleteObject(
+    {
+      Bucket: process.env.BUCKET_NAME,
+      Key: deleteOldFile,
+    },
+    function (err, data) {
+      console.log("oldfilename: ", deleteOldFile);
+    }
+  );
+};
 
 app.post("/data", async (req, res) => {
   const current_city = req.body.current_city;
@@ -303,7 +355,10 @@ app.get("/select-users", async (req, res) => {
     )
       .then((res) => res.json())
       .then((json) => {
-        res.json({ distance: json.rows[0]?.elements, imageFile: image });
+        res.json({
+          distance: json.rows[0]?.elements,
+          imageFile: image,
+        });
       });
   } catch (error) {
     console.log(error);
@@ -326,7 +381,8 @@ app.get("/visit_user_profile", async (req, res) => {
       .where("user_id", visiting_user_id);
 
     const imageFile =
-      "https://climber-nation.herokuapp.com/images/" + image[0]?.filename;
+      `https://climbernation.s3.us-west-1.amazonaws.com/${visiting_user_id}_` +
+      image[0]?.filename;
 
     res.send({ visiting_user_data: allUserData, imageFile: imageFile });
   } catch (error) {
@@ -336,11 +392,10 @@ app.get("/visit_user_profile", async (req, res) => {
 
 app.get("/my_profile", async (req, res) => {
   const user_id = req.query.user_id;
-  const allUserData = await db("images")
-    .innerJoin("users", "images.image_id", "users.user_id")
-    .innerJoin("data", "images.image_id", "data.user_data_id")
+
+  const allUserData = await db("data")
     .select("*")
-    .where("user_id", user_id);
+    .where("user_data_id", user_id);
 
   res.json({ allUserData: allUserData });
 });

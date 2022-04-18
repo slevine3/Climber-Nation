@@ -92,7 +92,8 @@ export const SearchUsers = (event) => {
         let array = [];
         climbingPartner.map((data, i) => {
           let mappedDistance = distance[i];
-
+         
+      
           if (mappedDistance === undefined) {
             climbingPartner.splice(i, 1);
             climbingPartner.map((data, i) => {
@@ -121,7 +122,7 @@ export const SearchUsers = (event) => {
                   name="image"
                   src={
                     element.filename !== null
-                      ? "https://climber-nation.herokuapp.com/images/" +
+                      ? `https://climbernation.s3.us-west-1.amazonaws.com/${element.user_id}_` +
                         element.filename
                       : default_profile
                   }
@@ -163,7 +164,7 @@ export const SearchUsers = (event) => {
                   name="image"
                   src={
                     element.filename !== null
-                      ? "https://climber-nation.herokuapp.com/images/" +
+                      ? `https://climbernation.s3.us-west-1.amazonaws.com/${element.user_id}_` +
                         element.filename
                       : default_profile
                   }
@@ -203,11 +204,9 @@ export const SearchUsers = (event) => {
               >
                 <img
                   className="profile_image"
-                  type="file"
-                  name="image"
                   src={
                     element.filename !== null
-                      ? "https://climber-nation.herokuapp.com/images/" +
+                      ? `https://climbernation.s3.us-west-1.amazonaws.com/${element.user_id}_` +
                         element.filename
                       : default_profile
                   }

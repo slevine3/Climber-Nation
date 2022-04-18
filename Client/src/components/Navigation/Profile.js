@@ -48,12 +48,12 @@ const Profile = () => {
             })
             .then((response) => {
               setStorageClimbPreference(
-                response.data.allUserData[0].climbing_preference
+                response.data.allUserData[0]?.climbing_preference
               );
-              setStorageBouldering(response.data.allUserData[0].bouldering);
-              setStorageTopRope(response.data.allUserData[0].top_rope);
-              setStorageLeadClimb(response.data.allUserData[0].lead_climb);
-              setStorageZipCode(response.data.allUserData[0].zip_code);
+              setStorageBouldering(response.data.allUserData[0]?.bouldering);
+              setStorageTopRope(response.data.allUserData[0]?.top_rope);
+              setStorageLeadClimb(response.data.allUserData[0]?.lead_climb);
+              setStorageZipCode(response.data.allUserData[0]?.zip_code);
             });
         }
 
@@ -85,6 +85,7 @@ const Profile = () => {
           );
         },
       }).then((response) => {
+        console.log("RESPONSE:", response);
         setError(response.data.error);
       });
     } catch (error) {
@@ -119,7 +120,6 @@ const Profile = () => {
       setMessage("Sorry, Hawaii zip codes are not currently a valid feature.");
       return;
     } else if (isNaN(zipCode) === true) {
-   
       setMessage("Please enter a 5-digit valid US zip code.");
       return;
     }
@@ -158,12 +158,13 @@ const Profile = () => {
               type="file"
               name="image"
               src={
-                localStorage.getItem("imageFile") ===
-                "https://climber-nation.herokuapp.com/images/undefined"
+                localStorage.getItem("imageFile") === "undefined"
                   ? default_profile
-                  : localStorage.getItem("imageFile")
+                  : `https://climbernation.s3.us-west-1.amazonaws.com/${localStorage.getItem(
+                      "user_id"
+                    )}_${localStorage.getItem("imageFile")}`
               }
-              alt="profile image"
+              alt="profile_image"
             ></img>
           </div>
 
@@ -334,10 +335,11 @@ const Profile = () => {
               type="file"
               name="image"
               src={
-                localStorage.getItem("imageFile") ===
-                "https://climber-nation.herokuapp.com/images/undefined"
+                localStorage.getItem("imageFile") === "undefined"
                   ? default_profile
-                  : localStorage.getItem("imageFile")
+                  : `https://climbernation.s3.us-west-1.amazonaws.com/${localStorage.getItem(
+                      "user_id"
+                    )}_${localStorage.getItem("imageFile")}`
               }
               alt="profile image"
             ></img>

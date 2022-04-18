@@ -5,6 +5,7 @@ import "./components/Sign-In/Login.css";
 import "./components/Sign-In/Register.css";
 import "./components/Navigation/NavBar.css";
 import "./components/Navigation/Profile.css";
+import "./components/Navigation/UserProfile.css"
 import "./components/Navigation/Home.css";
 
 import Home from "./components/Navigation/Home";
